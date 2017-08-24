@@ -1,0 +1,25 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+testresults
+
+npm-debug.log
+node_modules
+.idea
+
+.DS_Store
+.c9
+
+# type definitions we mirror from github
+**/typings/**/*.d.ts
+**/typings/tsd.cached.json
+.fusebox

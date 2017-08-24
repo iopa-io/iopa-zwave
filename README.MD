@@ -1,4 +1,4 @@
-# [![IOPA](http://iopa.io/iopa.png)](http://iopa.io)<br> IOPA
+# [![IOPA](http://iopa.io/iopa.png)](http://iopa.io)<br> IOPA-ZWAVE
 
 ## About
 Zero dependency, code-generated from raw protocol, lightning fast Zwave Packet Parser and Formatter in native Javascript for Node.

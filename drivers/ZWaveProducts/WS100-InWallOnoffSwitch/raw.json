@@ -1,0 +1,159 @@
+{
+	"Id": 2300,
+	"Name": "In-Wall On/Off Switch",
+	"Description": "- Works with incandescent and dimmable florescent (CFL) or most LED lighting\r\n- ON/OFF status and location LED indicator\r\n- Fits into standard single or multiple gang junction box\r\n- Over-The-Air firmware upgrade available with compatible gateway, Z-Wave static controller, or PC and software\r\n- Internal resettable fuse to protect from surge current\r\n- Manual reset capability\r\n- Support Central Scene\r\n",
+	"Description_Short": "WS-100 In Wall On/Off Switch\r\n- Replaces existing wall switch \r\n- Remotely or manually turns On or Off lights \r\n- Fits standard wall plates \r\n- Z-Wave Plus certified with 500 series chipset \r\n- Functions as a Z-Wave signal repeater\r\n- Support Central Scene",
+	"Brand": "Z Wave Products Inc.",
+	"Identifier": "WS-100",
+	"CertificationNumber": "ZC10-17035504",
+	"OemVersion": "HW: 255 FW: 5.16",
+	"HardwarePlatform": "ZM5202",
+	"ZWaveVersion": "6.51.08",
+	"LibraryType": "Enhanced 232 Slave",
+	"DeviceType": "On/Off Power Switch",
+	"RoleType": "Always On Slave",
+	"ManufacturerId": "0x0315",
+	"ProductTypeId": "0x4447",
+	"ProductId": "0x3033",
+	"FrequencyName": "U.S./Canada/Mexico",
+	"UserIcon": "0x0700",
+	"InstallerIcon": "0x0700",
+	"ProductUrl": "",
+	"SupportUrl": "",
+	"ManualUrl": "http://Products.Z-WaveAlliance.org/ProductManual/File?folder=&filename=Manuals/2300/ZWP_WS100_UG_030217.pdf",
+	"InclusionDescription": "1. Turn the connected lights ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.\r\n2. Add(Include) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. \r\n3. Normally, the sequence is as follows: when the inclusion process is prompted by your primary controller, single click and release the rocker switch to ON or OFF position.  The controller should show that the action was successful.  If the controller shows it was a fail, repeat the procedure.",
+	"ExclusionDescription": "1. Turn the connected appliance ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.\r\n2. Delete(Exclude) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. \r\n3. Normally, the sequence is as follows: when the exclusion process is prompted by your primary controller, single click and release the rocker switch.  The controller should show that the action was successful. If the controller shows it was a fail, repeat the procedure.",
+	"LearnModeDescription": "",
+	"ResetDescription": "Please use this procedure only in the event that the network primary controller is lost or otherwise inoperable.\r\n\r\nAll Configuration Parameters can all be restored to their factory default settings by using your primary controller to delete/reset the device.  \r\nTo manually reset, tap the ON button twice quickly and then tap the OFF button twice quickly.  Repeat the procedure to restore the settings to the factory default.\r\n\r\n",
+	"WakeupDescription": "",
+	"OtherSpecialFeaturesDescription": "Z-Wave Plus introduces a new process for scene activation – “Central Scene \r\nControl”. Press and release the button, it will send a certain command to the central controller via the lifeline association group 1. This allows the controller to react to key pressed, key released and key held down.\r\n\r\n-\tPress and release the top button, “Scene 001 Key Pressed” preset by the Gateway will be turned ON.\r\n-\tPress the top button twice, “Scene 001 Key Pressed Twice” preset by the Gateway will be turned ON.\r\n-\tPress the top button 3 times, “Scene 001 Key Pressed 3 Times” preset by the Gateway will be turned ON.\r\n-\tPress and release the bottom button, “Scene 002 Key Pressed” preset by the Gateway will be turned ON.\r\n-\tPress the bottom button twice, “Scene 002 Key Pressed Twice” preset by the Gateway will be turned ON.\r\n-\tPress the bottom button 3 times, “Scene 002 Key Pressed 3 Times” preset by the Gateway will be turned ON.\r\n",
+	"CertificationApprovedDate": "2017-03-23T22:55:15.348077",
+	"Image": "http://products.z-wavealliance.org/ProductImages/Index?productName=ZC10-17035504",
+	"Categories": [
+		"All Lighting Devices",
+		"On/Off Switches/Devices"
+	],
+	"SupportedCommandClasses": [],
+	"ControlledCommandClasses": [],
+	"S2Classes": [],
+	"AssociationGroups": [
+		{
+			"Description": "Z-Wave Plus Lifeline",
+			"GroupNumber": 1,
+			"MaximumNodes": 5
+		}
+	],
+	"ConfigurationParameters": [
+		{
+			"Name": "LED Indicator",
+			"Description": "This controls the state of the LED indicator on the switch.",
+			"ParameterNumber": 3,
+			"Size": 1,
+			"DefaultValue": 0,
+			"pType": 0,
+			"flagReadOnly": false,
+			"flagReInclude": false,
+			"flagAdvanced": false,
+			"v3plus": false,
+			"minValue": 0,
+			"maxValue": 0,
+			"ConfigurationParameterValues": [
+				{
+					"From": 0,
+					"To": 0,
+					"Description": "the LED indicator will be OFF when the connected appliance is ON, and the LED indicator will be ON when the connected appliance is OFF"
+				},
+				{
+					"From": 1,
+					"To": 1,
+					"Description": "the LED indicator will be OFF when the connected appliance is OFF, and the LED indicator will be ON when the connected appliance is ON"
+				},
+				{
+					"From": 2,
+					"To": 2,
+					"Description": "the LED indicator will be always OFF regardless of the load status"
+				}
+			]
+		},
+		{
+			"Name": "Orientation of the ON/OFF on the rocker switch",
+			"Description": "The orientation of the ON/OFF on the rocker switch can be inverted ",
+			"ParameterNumber": 4,
+			"Size": 1,
+			"DefaultValue": 0,
+			"pType": 0,
+			"flagReadOnly": false,
+			"flagReInclude": false,
+			"flagAdvanced": false,
+			"v3plus": false,
+			"minValue": 0,
+			"maxValue": 0,
+			"ConfigurationParameterValues": [
+				{
+					"From": 1,
+					"To": 1,
+					"Description": "the connected light will turn OFF by pressing the top side of the rocker switch and turn ON by pressing the bottom side."
+				},
+				{
+					"From": 0,
+					"To": 0,
+					"Description": "the connected light will turn ON by pressing the top side of the rocker switch and turn OFF by pressing the bottom side. "
+				}
+			]
+		}
+	],
+	"Features": [
+		{
+			"feature_Id": 10,
+			"product_Id": 2300,
+			"option_value_bool": false,
+			"option_value_text": "",
+			"option_value_selections": [
+				"White"
+			],
+			"feature_Type": "eSelect_One",
+			"featureName": "Color",
+			"featureDescription": "If the product is only available in one color, pick the color from the list.",
+			"featurePrompt": "Choose one color for the product's main color component. Not for use with products available in multiple colors."
+		},
+		{
+			"feature_Id": 22,
+			"product_Id": 2300,
+			"option_value_bool": false,
+			"option_value_text": "",
+			"option_value_selections": [
+				"Updatable by Consumer by RF"
+			],
+			"feature_Type": "eSelect_One",
+			"featureName": "Firmware Updatable",
+			"featureDescription": "Indicates whether the firmware can be updated and whether it is done by the consumer or a technician.",
+			"featurePrompt": "Choose one."
+		},
+		{
+			"feature_Id": 18,
+			"product_Id": 2300,
+			"option_value_bool": false,
+			"option_value_text": "",
+			"feature_Type": "eYes_No",
+			"featureName": "Outdoor Use",
+			"featureDescription": "Product is suitable for use outdoors.",
+			"featurePrompt": ""
+		},
+		{
+			"feature_Id": 17,
+			"product_Id": 2300,
+			"option_value_bool": false,
+			"option_value_text": "",
+			"option_value_selections": [
+				"Scene & Central Scene"
+			],
+			"feature_Type": "eSelect_One",
+			"featureName": "Z-Wave Scene Type",
+			"featureDescription": "Indicates which of the two types of Z-Wave scene command classes are supported. Scenes or Central Scene",
+			"featurePrompt": "Choose one."
+		}
+	],
+	"Supports_NWI": true,
+	"Supports_Explorer": true,
+	"is_FLiRS": false
+}

@@ -411,6 +411,9 @@ function emitDecodeParams(context, options) {
                 case "BITMASK":
                     emitDecodeBITMASK(options);
                     break;
+                case "BITMASK_BYTE":
+                    emitDecodeBITMASK_BYTE(options);
+                    break;
                 case "ARRAY":
                     emitDecodeARRAY(options);
                     break;
@@ -473,6 +476,9 @@ function emitEncodeParams(context, options) {
                     break;
                 case "BITMASK":
                     emitEncodeBITMASK(options);
+                    break;
+                case "BITMASK_BYTE":
+                    emitEncodeBITMASK_BYTE(options);
                     break;
                 case "ARRAY":
                     emitEncodeARRAY(options);
@@ -571,6 +577,18 @@ function emitDecodeCONST({ COMMAND_CLASS, COMMAND, param, header, body, footer }
     var ENUM = emitEnum(footer, `ENUM_${COMMAND_CLASS}_${COMMAND}_`, toUnderscoreCase(param.name), param.const);
     emitDecodeParam(body, param, `helpers.lookupNameValue(payload.readBYTE(), ${ENUM}.enum)`);
 }
+
+
+function emitEncodeBITMASK_BYTE({ COMMAND_CLASS, COMMAND, param, header, body, footer }) {
+    var ENUM = emitEnum(footer, `ENUM_${COMMAND_CLASS}_${COMMAND}_`, toUnderscoreCase(param.name), param.bitflag);
+    emitEncodeParam(body, param, `payload.writeBYTE(helpers.getBitMaskValue(context, '${param.name}', ${ENUM}))`);
+}
+
+function emitDecodeBITMASK_BYTE({ COMMAND_CLASS, COMMAND, param, header, body, footer }) {
+    var ENUM = emitEnum(footer, `ENUM_${COMMAND_CLASS}_${COMMAND}_`, toUnderscoreCase(param.name), param.bitflag);
+    emitDecodeParam(body, param, `helpers.lookupBitMaskValues(payload.readBYTE(), ${ENUM}.enum)`);
+}
+
 
 function emitEncodeARRAY({ COMMAND_CLASS, COMMAND, param, header, body, footer }) {
     var options = {};
@@ -893,6 +911,7 @@ function emitDecodeMULTI_ARRAY({ COMMAND_CLASS, COMMAND, param, header, body, fo
 
 }
 
+
 function emitEncodeBITMASK({ COMMAND_CLASS, COMMAND, param, header, body, footer, parent }) {
 
     var lengthoffset = _getOffset(parent, param.lengthoffset);
@@ -903,7 +922,7 @@ function emitEncodeBITMASK({ COMMAND_CLASS, COMMAND, param, header, body, footer
         var length = Object.keys(param.bitflag).length;
         if ("255" in param.bitflag) length -= 1;
         length = param.len || length;
-        emitEncodeParam(body, param, `payload.writeBITMASK(helpers.getFlagArray(context,  ${ENUM}), {length: ${length}})`);
+        body.push(TAB2 + `payload.writeBITMASK(helpers.getFlagArray(context,  ${ENUM}), {length: ${length}});`);
     } else {
         var length;
 
@@ -1103,7 +1122,7 @@ function emitEnum(footer, PREFIX, NAME, enumObject) {
     // create ENUM LIST
     var list1 = [];
     Object.keys(enumObject).forEach(function (enumKey) {
-        if (enumObject[enumKey].toString().match(/^\d/))
+        if (enumObject[enumKey].toString().match(/^\d/) || enumObject[enumKey].toString().match(/\./))
             list1.push("'" + enumObject[enumKey] + "': " + toHex8(enumKey));
         else
             list1.push(enumObject[enumKey] + ": " + toHex8(enumKey));
@@ -1183,6 +1202,14 @@ function emitParamList(list, prefix, context) {
                     enumFields.forEach(function item(t, i) {
                         list.push("\t\t'" + prefix + toHex8(paramkey) + "-" + i.toString() + "': {" + emitParamSummary({ name: param.bitflag[t] }) + " /* " + param.name + " " + param.type + " */ }");
                     })
+                } else if (param.type == "BITMASK_BYTE" && 'bitflag' in param) {
+                    var enumFields = Object.keys(param.bitflag).filter((t) => t != "255");
+                    let list2 = [];   
+                    enumFields.forEach(function item(t, i) {
+                        list2.push("\t\t'" + prefix + toHex8(paramkey) + "-" + i.toString() + "': {" + emitParamSummary({ name: param.bitflag[t] }) + " /* " + param.name + " " + param.type + " */ }");
+                    })
+                    list.push("\t\t'" + prefix + toHex8(paramkey) + "': {" + emitParamSummary(param) + " /* " + param.type + " */ }");
+                    list.push("\t\t" + list2.join(",\r\n\t\t"));
                 } else {
                     list.push("\t\t'" + prefix + toHex8(paramkey) + "': {" + emitParamSummary(param) + " /* " + param.type + " */ }");
                 }

@@ -5355,7 +5355,7 @@ COMMAND_CLASS.enum[0x30].command[0x04] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SENSOR_BINARY_SENSOR_TYPE), {length: 14}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SENSOR_BINARY_SENSOR_TYPE), {length: 14});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -5446,7 +5446,7 @@ COMMAND_CLASS.enum[0x31].command[0x02] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SENSOR_MULTILEVEL_SUPPORTED_SENSOR_), {length: 58}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SENSOR_MULTILEVEL_SUPPORTED_SENSOR_), {length: 58});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -6259,7 +6259,7 @@ COMMAND_CLASS.enum[0x34].command[0x01] = {
 		if ('SeqNo' in context) payload.writeBYTE(context['SeqNo']); else return payload.asBuffer();
 		if ('Reserved' in context) payload.writeBYTE(context['Reserved']); else return payload.asBuffer();
 		if ('Mode' in context) payload.writeBYTE(helpers.getValue(context, 'Mode', ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_MODE)); else return payload.asBuffer();
-		if ('TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -6553,7 +6553,7 @@ COMMAND_CLASS.enum[0x34].command[0x09] = {
 		var payload = BufferStream.alloc();
 		if ('SeqNo' in context) payload.writeBYTE(context['SeqNo']); else return payload.asBuffer();
 		if ('zwave.NodeId' in context) payload.writeBYTE(context['zwave.NodeId']); else return payload.asBuffer();
-		if ('TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1});
 		if ('Mode' in context) payload.writeBYTE(context['Mode']); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
@@ -7138,7 +7138,7 @@ COMMAND_CLASS.enum[0x37].command[0x04] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HRV_STATUS_STATUS_PARAMETER), {length: 7}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HRV_STATUS_STATUS_PARAMETER), {length: 7});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -7646,7 +7646,7 @@ COMMAND_CLASS.enum[0x39].command[0x0b] = {
 			if ('Reserved' in context) _properties1 = _properties1 | ((context['Reserved'] << 4) & 0xf0);
 			payload.writeBYTE(_properties1);
 		} else return payload.asBuffer();;
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HRV_CONTROL_MODE), {length: 5}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HRV_CONTROL_MODE), {length: 5});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -9168,7 +9168,7 @@ COMMAND_CLASS.enum[0x40].command[0x05] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_MODE_SUPPORTED_), {length: 32}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_MODE_SUPPORTED_), {length: 32});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -9374,7 +9374,7 @@ COMMAND_CLASS.enum[0x42].command[0x04] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_OPERATING_STATE), {length: 12}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_OPERATING_STATE), {length: 12});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -9404,7 +9404,7 @@ COMMAND_CLASS.enum[0x42].command[0x05] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_OPERATING_STATE), {length: 12}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_OPERATING_STATE), {length: 12});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -9670,7 +9670,7 @@ COMMAND_CLASS.enum[0x43].command[0x05] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_SETPOINT_SUPPORTED_), {length: 12}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_SETPOINT_SUPPORTED_), {length: 12});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -9956,7 +9956,7 @@ COMMAND_CLASS.enum[0x44].command[0x05] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_FAN_MODE_SUPPORTED_), {length: 16}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_THERMOSTAT_FAN_MODE_SUPPORTED_), {length: 16});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -11637,7 +11637,7 @@ COMMAND_CLASS.enum[0x4d].command[0x05] = {
 		if ('SeqNo' in context) payload.writeBYTE(context['SeqNo']); else return payload.asBuffer();
 		if ('Reserved' in context) payload.writeBYTE(context['Reserved']); else return payload.asBuffer();
 		if ('zwave.NodeId' in context) payload.writeBYTE(context['zwave.NodeId']); else return payload.asBuffer();
-		if ('TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -13204,7 +13204,7 @@ COMMAND_CLASS.enum[0x54].command[0x01] = {
 		if ('SeqNo' in context) payload.writeBYTE(context['SeqNo']); else return payload.asBuffer();
 		if ('Reserved' in context) payload.writeBYTE(context['Reserved']); else return payload.asBuffer();
 		if ('Mode' in context) payload.writeBYTE(helpers.getValue(context, 'Mode', ENUM_NETWORK_MANAGEMENT_PRIMARY_CONTROLLER_CHANGE_MODE)); else return payload.asBuffer();
-		if ('TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NETWORK_MANAGEMENT_INCLUSION_NODE_ADD_TX_OPTIONS), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -14206,7 +14206,7 @@ COMMAND_CLASS.enum[0x5b].command[0x02] = {
 		if ('VariableGroup' in context) {
 			if (context['VariableGroup'].length !== (payload.at(0))) throw new Error('VariableGroup array size does not match length field');
 			context['VariableGroup'].forEach(function(context) {
-					if ('SupportedKeyAttributesForScene' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_CENTRAL_SCENE_SUPPORTED_SUPPORTED_KEY_ATTRIBUTES_FOR_SCENE), {length: 7}); else return payload.asBuffer();
+					payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_CENTRAL_SCENE_SUPPORTED_SUPPORTED_KEY_ATTRIBUTES_FOR_SCENE), {length: 7});
 			});
 		} else return payload.asBuffer();;
 		return payload.asBuffer();
@@ -15933,7 +15933,7 @@ COMMAND_CLASS.enum[0x64].command[0x05] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HUMIDITY_CONTROL_SETPOINT_SETPOINT_TYPE), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HUMIDITY_CONTROL_SETPOINT_SETPOINT_TYPE), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -16351,7 +16351,7 @@ COMMAND_CLASS.enum[0x66].command[0x05] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_BARRIER_OPERATOR_SIGNAL_SUPPORTED_), {length: 3}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_BARRIER_OPERATOR_SIGNAL_SUPPORTED_), {length: 3});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -17308,7 +17308,7 @@ COMMAND_CLASS.enum[0x6b].command[0x04] = {
 		} else return payload.asBuffer();;
 		if ('PressureValue' in context) payload.writeFLOATING(context['PressureValue'], {size: payload.at(4) & 0x07, precision: (payload.at(4) & 0xe0) >> 5 }); else return payload.asBuffer();
 		if ('ShutoffDuration' in context) payload.writeBYTE(context['ShutoffDuration']); else return payload.asBuffer();
-		if ('SystemErrorStatus' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_SYSTEM_STATUS_SYSTEM_ERROR_STATUS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_SYSTEM_STATUS_SYSTEM_ERROR_STATUS), {length: 1});
 		if ('MasterValve' in context || 'Reserved' in context) {
 			let _properties3 = 0x00;
 			if (context['MasterValve']) _properties3 = _properties3 | 0x01;
@@ -17415,7 +17415,7 @@ COMMAND_CLASS.enum[0x6b].command[0x05] = {
 			payload.writeBYTE(_properties2);
 		} else return payload.asBuffer();;
 		if ('LowPressureThresholdValue' in context) payload.writeFLOATING(context['LowPressureThresholdValue'], {size: payload.at(3) & 0x07, precision: (payload.at(3) & 0xe0) >> 5 }); else return payload.asBuffer();
-		if ('SensorPolarity' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_SYSTEM_CONFIG_SENSOR_POLARITY), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_SYSTEM_CONFIG_SENSOR_POLARITY), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -17499,7 +17499,7 @@ COMMAND_CLASS.enum[0x6b].command[0x07] = {
 			payload.writeBYTE(_properties2);
 		} else return payload.asBuffer();;
 		if ('LowPressureThresholdValue' in context) payload.writeFLOATING(context['LowPressureThresholdValue'], {size: payload.at(3) & 0x07, precision: (payload.at(3) & 0xe0) >> 5 }); else return payload.asBuffer();
-		if ('SensorPolarity' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_SYSTEM_CONFIG_SENSOR_POLARITY), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_SYSTEM_CONFIG_SENSOR_POLARITY), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -17584,7 +17584,7 @@ COMMAND_CLASS.enum[0x6b].command[0x09] = {
 		} else return payload.asBuffer();;
 		if ('ValveId' in context) payload.writeBYTE(context['ValveId']); else return payload.asBuffer();
 		if ('NominalCurrent' in context) payload.writeBYTE(context['NominalCurrent']); else return payload.asBuffer();
-		if ('ValveErrorStatus' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_VALVE_INFO_VALVE_ERROR_STATUS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_VALVE_INFO_VALVE_ERROR_STATUS), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -17682,7 +17682,7 @@ COMMAND_CLASS.enum[0x6b].command[0x0a] = {
 			payload.writeBYTE(_properties4);
 		} else return payload.asBuffer();;
 		if ('FlowLowThresholdValue' in context) payload.writeFLOATING(context['FlowLowThresholdValue'], {size: payload.at(8) & 0x07, precision: (payload.at(8) & 0xe0) >> 5 }); else return payload.asBuffer();
-		if ('SensorUsage' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_VALVE_CONFIG_SENSOR_USAGE), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_VALVE_CONFIG_SENSOR_USAGE), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -17825,7 +17825,7 @@ COMMAND_CLASS.enum[0x6b].command[0x0c] = {
 			payload.writeBYTE(_properties4);
 		} else return payload.asBuffer();;
 		if ('FlowLowThresholdValue' in context) payload.writeFLOATING(context['FlowLowThresholdValue'], {size: payload.at(8) & 0x07, precision: (payload.at(8) & 0xe0) >> 5 }); else return payload.asBuffer();
-		if ('SensorUsage' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_VALVE_CONFIG_SENSOR_USAGE), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_IRRIGATION_VALVE_CONFIG_SENSOR_USAGE), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -18229,7 +18229,7 @@ COMMAND_CLASS.enum[0x6d].command[0x05] = {
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HUMIDITY_CONTROL_MODE), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_HUMIDITY_CONTROL_MODE), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -18505,14 +18505,14 @@ COMMAND_CLASS.enum[0x6f].command[0x05] = {
 			if ('Reserved1' in context) _properties1 = _properties1 | ((context['Reserved1'] << 2) & 0xfc);
 			payload.writeBYTE(_properties1);
 		} else return payload.asBuffer();;
-		if ('DataTypeSupportedBitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_ENTRY_CONTROL_EVENT_SUPPORTED_DATA_TYPE_SUPPORTED_), {length: 4}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_ENTRY_CONTROL_EVENT_SUPPORTED_DATA_TYPE_SUPPORTED_), {length: 4});
 		if ('EventSupportedBitMaskLength' in context || 'Reserved2' in context) {
 			let _properties2 = 0x00;
 			if ('EventSupportedBitMaskLength' in context) _properties2 = _properties2 | ((context['EventSupportedBitMaskLength']) & 0x1f);
 			if ('Reserved2' in context) _properties2 = _properties2 | ((context['Reserved2'] << 5) & 0xe0);
 			payload.writeBYTE(_properties2);
 		} else return payload.asBuffer();;
-		if ('EventTypeSupportedBitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_ENTRY_CONTROL_NOTIFICATION_EVENT_TYPE), {length: 26}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_ENTRY_CONTROL_NOTIFICATION_EVENT_TYPE), {length: 26});
 		if ('KeyCachedSizeSupportedMinimum' in context) payload.writeBYTE(context['KeyCachedSizeSupportedMinimum']); else return payload.asBuffer();
 		if ('KeyCachedSizeSupportedMaximum' in context) payload.writeBYTE(context['KeyCachedSizeSupportedMaximum']); else return payload.asBuffer();
 		if ('KeyCachedTimeoutSupportedMinimum' in context) payload.writeBYTE(context['KeyCachedTimeoutSupportedMinimum']); else return payload.asBuffer();
@@ -19304,7 +19304,7 @@ COMMAND_CLASS.enum[0x71].command[0x08] = {
 			if ('Reserved' in context) _properties1 = _properties1 | ((context['Reserved'] << 5) & 0x60);
 			payload.writeBYTE(_properties1);
 		} else return payload.asBuffer();;
-		if ('BitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NOTIFICATION_EVENT_SUPPORTED_NOTIFICATION_TYPE), {length: 19}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_NOTIFICATION_EVENT_SUPPORTED_NOTIFICATION_TYPE), {length: 19});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -21547,7 +21547,7 @@ COMMAND_CLASS.enum[0x87].command[0x05] = {
 			if ('Reserved' in context) _properties1 = _properties1 | ((context['Reserved'] << 5) & 0xe0);
 			payload.writeBYTE(_properties1);
 		} else return payload.asBuffer();;
-		if ('PropertySupportedBitMask' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_INDICATOR_PROPERTY_ID), {length: 5}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_INDICATOR_PROPERTY_ID), {length: 5});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -23890,7 +23890,7 @@ COMMAND_CLASS.enum[0x9f].command[0x05] = {
 		} else return payload.asBuffer();;
 		if ('SupportedKexSchemes' in context) payload.writeBYTE(context['SupportedKexSchemes']); else return payload.asBuffer();
 		if ('SupportedEcdhProfiles' in context) payload.writeBYTE(context['SupportedEcdhProfiles']); else return payload.asBuffer();
-		if ('RequestedKeys' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SECURITY_2_KEX_REQUESTED_KEYS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SECURITY_2_KEX_REQUESTED_KEYS), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {
@@ -23947,7 +23947,7 @@ COMMAND_CLASS.enum[0x9f].command[0x06] = {
 		} else return payload.asBuffer();;
 		if ('SelectedKexScheme' in context) payload.writeBYTE(context['SelectedKexScheme']); else return payload.asBuffer();
 		if ('SelectedEcdhProfile' in context) payload.writeBYTE(context['SelectedEcdhProfile']); else return payload.asBuffer();
-		if ('GrantedKeys' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SECURITY_2_KEX_REQUESTED_KEYS), {length: 1}); else return payload.asBuffer();
+		payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SECURITY_2_KEX_REQUESTED_KEYS), {length: 1});
 		return payload.asBuffer();
 	},
 	decode: function (payload) {

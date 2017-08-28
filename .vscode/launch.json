@@ -7,14 +7,14 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch BUILD",
             "program": "${workspaceRoot}/build.js"
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Test",
-            "program": "${workspaceRoot}/test.js"
+            "name": "Launch DEMO",
+            "program": "${workspaceRoot}/server.js"
         }
     ]
 }

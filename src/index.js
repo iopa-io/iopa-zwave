@@ -27,5 +27,5 @@
 
 //module.exports.PROTOCOL = require('./bin/protocol-zwave').default;
 module.exports.PROTOCOL = require('./zwave-protocol-generated');
-module.exports.SERVER = require('./zwave-server-middleware');
-
+module.exports.Server = require('./zwave-server-middleware');
+module.exports.Devices = require('./zwave-devices');

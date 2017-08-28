@@ -54,8 +54,6 @@ function ZwaveMessageMiddleware(app) {
 }
 
 ZwaveMessageMiddleware.prototype.invoke = function (context, next) {
-
-    console.log("UNKNOWN EVENT");
     return next();
 }
 
@@ -140,8 +138,7 @@ ZwaveMessageNodeMissing.prototype.send = function (server, next, context) {
 
     var serialFunc = PROTOCOL.SERIAL_API_FUNC.enum[context[ZWAVE.SerialFunctionClass]];
 
-    if (!context[ZWAVE.NodeId] && context[ZWAVE.SerialPayload])
-    {
+    if (!context[ZWAVE.NodeId] && context[ZWAVE.SerialPayload]) {
         // Stash NodeId for payloads that have it as first byte, and provided in raw format
         if ('0x00' in serialFunc.param && serialFunc.param['0x00'].encaptype == 'NODE_NUMBER')
             context[ZWAVE.NodeId] = context[ZWAVE.SerialPayload][0];
@@ -155,9 +152,11 @@ ZwaveMessageNodeMissing.prototype.send = function (server, next, context) {
             response[ZWAVE.Nodes][nodeId][ZWAVE.NodeId] = nodeId;
             response[ZWAVE.Nodes][0] = undefined;
         }
+
+        response[DEVICE.Id] = server.Id + ":" + nodeId;
         return response;
     })
-    
+
 }
 
 /*
@@ -190,17 +189,16 @@ ZwaveMessageTransactionMatcher.prototype.invoke = function (context, next) {
         || context[ZWAVE.SerialFunctionClass] == PROTOCOL.SERIAL_API_FUNC.APPLICATION_COMMAND_HANDLER) {
         var lastRequest = store.requestQueue.shift() || {};
         store.lastRequestFunctionClass = lastRequest[ZWAVE.SerialFunctionClass];
-        return Promise.resolve().then(function () {
-            if (lastRequest.resolve)
-              lastRequest.resolve(context);
-            else 
-            console.error("UNMATCHED REQUEST");
-        });
+        if (lastRequest.resolve)
+            {
+            lastRequest.resolve(context);
+             return  true;
+            }
+        else {
+            return next();
+        }
     } else {
-
-        delete context[ZWAVE.Capabilities];  // TEMPORARY: delete for logging purposes only
-        console.log(context);
-
+        console.log(context.toString());
         var lastRequest = store.requestQueue.shift() || {};
         store.lastRequestFunctionClass = lastRequest[ZWAVE.SerialFunctionClass];
         console.error("[ZWAVE] ZwaveMessageTransactionMatcher Unknown response received");

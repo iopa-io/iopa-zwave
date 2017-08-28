@@ -61,6 +61,17 @@ ZwaveSerialApiMiddleware.prototype.invoke = function (context, next) {
          return Promise.resolve();
     }
 
+    if (cmd == PROTOCOL.SERIAL_API_FUNC.GET_NODE_PROTOCOL_INFO)
+        {
+           // remap to commandClass;
+    //       context[ZWAVE.SerialFunctionClass] = PROTOCOL.SERIAL_API_FUNC.APPLICATION_COMMAND_HANDLER;
+           context[ZWAVE.NodeId] = 0;
+           context[ZWAVE.CommandClass] = PROTOCOL.COMMAND_CLASS.ZWAVE_CMD_CLASS.id;
+           context[ZWAVE.Command] = PROTOCOL.COMMAND_CLASS.ZWAVE_CMD_CLASS.NODE_INFO;
+           context[ZWAVE.Payload] = context[ZWAVE.SerialPayload];
+           return next();
+        }
+        
     var item = serialFunc.decode(context[ZWAVE.SerialPayload]);
 
     if (context[ZWAVE.SerialFunctionClass] == PROTOCOL.SERIAL_API_FUNC.APPLICATION_COMMAND_HANDLER ||
@@ -68,10 +79,6 @@ ZwaveSerialApiMiddleware.prototype.invoke = function (context, next) {
 
         // add to main part of context for next middleware to process
         Object.assign(context, item);
-    }
-    else if (context[ZWAVE.SerialFunctionClass] == PROTOCOL.SERIAL_API_FUNC.GET_NODE_PROTOCOL_INFO) {
-        context[ZWAVE.Nodes][0] = {};
-        Object.assign(context[ZWAVE.Nodes][0], item);
     } else {
         // add to controller
         Object.assign(context[ZWAVE.Controller], item);

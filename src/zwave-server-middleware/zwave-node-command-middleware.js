@@ -17,9 +17,10 @@
 
 const util = require('util'),
     IopaServer = require('../iopa-slim').IopaServer,
+    DEVICE = require('../iopa-slim').constants.DEVICE,
+    SERVER = require('../iopa-slim').constants.SERVER,
     ZWAVE = require('./zwave-constants'),
-    PROTOCOL = ZWAVE.PROTOCOL,
-    SERVER = { Capabilities: "server.Capabilities" };
+    PROTOCOL = ZWAVE.PROTOCOL;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -42,9 +43,44 @@ function ZwaveNodeCommandMiddleware(app) {
         throw new Error("ZwaveNodeCommandMiddleware requires embedded ZwaveServer");
 
     app.use(ZwaveNodeCommandSerialMiddleware);
+      app.use(ZwaveNodeCommandReportMiddleware);  
+
+    
 }
 
 module.exports = ZwaveNodeCommandMiddleware;
+
+/*
+ * Zwave Node Command Report Middleware
+ * 
+ * This middleware does additional business logic translation based on Command Report
+ * 
+ * Usage: app.use(ZwaveNodeCommandReportMiddleware)
+ * 
+ * @class ZwaveNodeCommandSerialMiddleware
+ * @param app  IOPA AppBuilder App
+ * @constructor
+ * @public
+ */
+function ZwaveNodeCommandReportMiddleware(app) {
+}
+
+ZwaveNodeCommandReportMiddleware.prototype.invoke = function(context, next) {
+
+    switch (context[ZWAVE.CommandClass]) {
+        case PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.id:
+        if (context[ZWAVE.Command] == PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.REPORT)
+            {
+                var report = context[ZWAVE.Nodes][context[ZWAVE.NodeId]].MANUFACTURER_SPECIFIC.REPORT;
+                var key = `${toHex16a(report.ManufacturerId)}-${toHex16a(report.ProductTypeId)}-${toHex16a(report.ProductId)}`;
+                context[ZWAVE.Nodes][context[ZWAVE.NodeId]][DEVICE.ProductKey] = key;
+             }
+        break;
+        default: 
+    }    
+
+    return next();
+}
 
 /*
  * Zwave Node Command Serial API Middleware
@@ -113,35 +149,57 @@ ZwaveNodeCommandSerialMiddleware.prototype.invoke = function (context, next) {
 
     switch (context[ZWAVE.SerialFunctionClass]) {
         case PROTOCOL.SERIAL_API_FUNC.GET_INIT_DATA:
-            context[ZWAVE.Controller].NodesAvailable.forEach(function (NodeId) {
-                context[ZWAVE.Nodes][NodeId] = { available: true };
+            context[ZWAVE.Controller][ZWAVE.NodesAvailable].forEach(function (NodeId) {
+                context[ZWAVE.Nodes][NodeId] = { 'zwave.Available': true };
             });
 
             return next();
 
         case PROTOCOL.SERIAL_API_FUNC.APPLICATION_COMMAND_HANDLER:
+  
             var node = {};
             context[ZWAVE.Nodes][context[ZWAVE.NodeId]] = node;
 
             var commandClass = context[ZWAVE.CommandClass];
             var command = context[ZWAVE.Command];
-            var commandFunc = PROTOCOL.COMMAND_CLASS.enum[commandClass].command[command];
-            var item = commandFunc.decode(context[ZWAVE.Payload]);
-            item[ZWAVE.CommandClass] = commandClass;
-            node[PROTOCOL.COMMAND_CLASS.enum[commandClass].name] = item;
 
+            var commandClassFunc = PROTOCOL.COMMAND_CLASS.enum[commandClass];
+            var commandFunc = commandClassFunc.command[command];
+
+            var item = commandFunc.decode(context[ZWAVE.Payload]);
+
+            node[commandClassFunc.name] = node[commandClassFunc.name] || {};
+            node[commandClassFunc.name][commandFunc.name] = item;
+
+            return next();
+        case PROTOCOL.SERIAL_API_FUNC.GET_NODE_PROTOCOL_INFO:
+            var node = {};
+            context[ZWAVE.Nodes][context[ZWAVE.NodeId]] = node;
+            var commandClassFunc = PROTOCOL.COMMAND_CLASS.enum[context[ZWAVE.CommandClass]];
+            var commandFunc = commandClassFunc.command[context[ZWAVE.Command]];
+            var item = commandFunc.decode(context[ZWAVE.Payload]);
+            node[ZWAVE.BasicDevice] = item.BasicDeviceClass;
+            node[ZWAVE.GenericDevice] = item[ZWAVE.GenericDevice];
+            node[ZWAVE.SpecificDevice] = item[ZWAVE.SpecificDevice];
+            delete item.BasicDeviceClass;
+            delete item[ZWAVE.GenericDevice];
+            delete item[ZWAVE.SpecificDevice];
+
+            node[commandClassFunc.name] = node[commandClassFunc.name] || {};
+            node[commandClassFunc.name][commandFunc.name] = item;
+;
             return next();
         case PROTOCOL.SERIAL_API_FUNC.APPLICATION_UPDATE:
             var node = {};
             context[ZWAVE.Nodes][context[ZWAVE.NodeId]] = node;
 
-            if (context.UpdateState.value == PROTOCOL.ENUM.SERIAL_API_FUNC_APPLICATION_UPDATE_UPDATE_STATE.NodeInfoReceived) {
+            if (context[ZWAVE.UpdateStatus].value == PROTOCOL.ENUM.SERIAL_API_FUNC_APPLICATION_UPDATE_ZWAVE_UPDATE_STATUS.NodeInfoReceived) {
                 node[ZWAVE.Online] = true;
                 node[ZWAVE.BasicDevice] = context[ZWAVE.BasicDevice];
                 node[ZWAVE.GenericDevice] = context[ZWAVE.GenericDevice];
                 node[ZWAVE.SpecificDevice] = context[ZWAVE.SpecificDevice];
-                node[ZWAVE.CommandClass] = context[ZWAVE.CommandClass];
-            } else if (context.UpdateState.value == PROTOCOL.ENUM.SERIAL_API_FUNC_APPLICATION_UPDATE_UPDATE_STATE.NodeInfoReqFailed) {
+                node[ZWAVE.SupportedCommandClasses] = context[ZWAVE.CommandClass];
+            } else if (context[ZWAVE.UpdateStatus].value == PROTOCOL.ENUM.SERIAL_API_FUNC_APPLICATION_UPDATE_ZWAVE_UPDATE_STATUS.NodeInfoReqFailed) {
                 node[ZWAVE.Online] = false;
             }
             return next();
@@ -206,6 +264,10 @@ IopaServer.prototype.sendNodesMulti = function (nodes, CmdClass, Cmd, payload) {
 
 function toHex16(d) {
     return "0x" + ("0000" + (+d).toString(16)).slice(-4);
+}
+
+function toHex16a(d) {
+    return ("0000" + (+d).toString(16)).slice(-4);
 }
 
 function toHex32(b1, b2, b3, b4) {

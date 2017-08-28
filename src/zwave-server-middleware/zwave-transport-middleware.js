@@ -200,7 +200,7 @@ ZwaveTransportFlowControl.prototype.invoke = function (context, next) {
     }
 
     if (this.lastMessage.length > 0 && messageMatches(context[ZWAVE.RawPayload], this.lastMessage.asRawBuffer())) {
-        console.log("R: dropping duplicate " + context["server.Id"] + "-" + context[ZWAVE.RawPayload].asBufferStream().Seq);
+        console.log("R: dropping duplicate " + context["server.Id"]);
         console.log(context[ZWAVE.RawPayload]);
         return Promise.resolve();
     }

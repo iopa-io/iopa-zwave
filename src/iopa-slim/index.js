@@ -30,8 +30,17 @@ const constants = {
         ParentContext: "server.ParentContext",
         RawStream: "server.RawStream",
         RawTransport: "server.RawTransport",
+        Server: "server.Server",
         IsLocalOrigin: "server.IsLocalOrigin",
-        IsRequest: "server.IsRequest"
+        IsRequest: "server.IsRequest",
+        Version: "server.Version"
+    },
+    DEVICE: {
+        ProductKey: "device.ProductKey",
+        Id: "device.Id",
+        Handler: "device.Handler",
+        Capability: "urn:io:iopa:device",
+        HandlerName: "device.HandlerName"
     }
 }
 
@@ -469,7 +478,7 @@ IopaContext.prototype.toString = function () {
         SERVER.CancelToken,
             "dispose",
         SERVER.Factory,
-        ]), 100, false);
+        ]), false,100);
 }
 
 Object.defineProperty(IopaContext.prototype, "log", {

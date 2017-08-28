@@ -37,7 +37,7 @@ module.exports = {
                     param: {},
                     response: {
                         '0': {
-                            name: 'SerialApiVersion',
+                            name: 'zwave.SerialApiVersion',
                             type: 'BYTE',
                             showhex: true
                         },
@@ -46,10 +46,10 @@ module.exports = {
                             type: 'BITMASK',
                             bitflag:
                             {
-                                1: "IsSlaveApi",
-                                2: "HasTimerSupport",
-                                3: "IsSecondaryController",
-                                4: "IsStaticUpdateController"
+                                1: "zwave.IsSlaveApi",
+                                2: "zwave.HasTimerSupport",
+                                3: "zwave.IsSecondaryController",
+                                4: "zwave.IsStaticUpdateController"
                             },
                             len: 1,
                             lengthoffset: 255,
@@ -61,21 +61,21 @@ module.exports = {
                             type: 'STRUCT_BYTE',
                             bitfield:
                             {
-                                '31': { fieldname: 'NumberOfNodes', shifter: 0 },
+                                '31': { fieldname: 'zwave.NumberOfNodes', shifter: 0 },
                                 '96': { fieldname: 'Reserved', shifter: 5 }
                             },
                         },
                         '3':
                         {
-                            name: 'NodesAvailable',
+                            name: 'zwave.NodesAvailable',
                             type: 'BITMASK',
                             showhex: true,
                             lengthoffset: 2,
                             lengthmask: 31,
                             shifter: 0
                         },
-                        '4': { name: 'ChipType', type: 'BYTE', showhex: true },
-                        '5': { name: 'ChipRevision', type: 'BYTE', showhex: true }
+                        '4': { name: 'zwave.ChipType', type: 'BYTE', showhex: true },
+                        '5': { name: 'zwave.ChipRevision', type: 'BYTE', showhex: true }
                     }
                 },
                 0x03: { id: 0x03, name: 'APPL_NODE_INFORMATION' },
@@ -84,18 +84,17 @@ module.exports = {
                     name: 'APPLICATION_COMMAND_HANDLER',
                     response: {
                         '0': {
-                            type: 'STRUCT_BYTE',
-                            name: 'RxStatus',
+                            type: 'BITMASK_BYTE',
+                            name: 'zwave.RxStatus',
                             bitflag:
                             {
-                                0x00: 'Single',
-                                0x01: 'LowPower',
-                                0x02: 'Busy',
-                                0x0C: 'Mask',
-                                0x04: 'Broad',
-                                0x08: 'Multi',
-                                0x10: 'Explore',
-                                0x40: 'ForeignFrame'
+                                0: 'Single',
+                                1: 'LowPower',
+                                2: 'Busy',
+                                3: 'Broad',
+                                4: 'Multi',
+                                5: 'Explore',
+                                6: 'ForeignFrame'
                             }
                         },
                         '1': {
@@ -164,24 +163,24 @@ module.exports = {
                 0x06: {
                     id: 0x06, name: 'SET_TIMEOUTS', version: '4',
                     param: {
-                        '0': { name: 'RxAckTimeout', type: 'BYTE', showhex: true },
-                        '1': { name: 'RxByteTimeout', type: 'BYTE', showhex: true }
+                        '0': { name: 'zwave.RxAckTimeout', type: 'BYTE', showhex: true },
+                        '1': { name: 'zwave.RxByteTimeout', type: 'BYTE', showhex: true }
                     },
                     response: {
-                        '0': { name: 'PreviousRxAckTimeout', type: 'BYTE', showhex: true },
-                        '1': { name: 'PreviousRxByteTimeout', type: 'BYTE', showhex: true }
+                        '0': { name: 'zwave.PreviousRxAckTimeout', type: 'BYTE', showhex: true },
+                        '1': { name: 'zwave.PreviousRxByteTimeout', type: 'BYTE', showhex: true }
                     }
                 },
                 0x07: {
                     id: 0x07, name: 'GET_CAPABILITIES', version: '4',
                     param: {},
                     response: {
-                        '0': { name: 'SerialApiApplicationVersion', type: 'WORD', showhex: true },
-                        '1': { name: 'ManufacturerId', type: 'WORD', showhex: true },
-                        '2': { name: 'DeviceType', type: 'WORD', showhex: true },
-                        '3': { name: 'DeviceId', type: 'WORD', showhex: true },
+                        '0': { name: 'zwave.SerialApiApplicationVersion', type: 'WORD', showhex: true },
+                        '1': { name: 'zwave.ManufacturerId', type: 'WORD', showhex: true },
+                        '2': { name: 'zwave.DeviceType', type: 'WORD', showhex: true },
+                        '3': { name: 'zwave.DeviceId', type: 'WORD', showhex: true },
                         '4': {
-                            name: 'SerialApiCapabilities',
+                            name: 'zwave.SerialApiSupported',
                             type: 'BITMASK',
                             lengthoffset: 255,
                             lengthmask: 0,
@@ -250,7 +249,7 @@ module.exports = {
                         '5':
                         {
                             name: 'zwave.TxOptions',
-                            type: 'BITMASK',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '0': 'None',
@@ -285,13 +284,13 @@ module.exports = {
                             type: 'STRUCT_BYTE',
                             bitfield:
                             {
-                                '31': { fieldname: 'NumberOfNodes', shifter: 0 },
+                                '31': { fieldname: 'zwave.NumberOfNodes', shifter: 0 },
                                 '96': { fieldname: 'Reserved', shifter: 5 }
                             },
                         },
                         '1':
                         {
-                            name: 'NodeListData',
+                            name: 'zwave.NodeListData',
                             type: 'BITMASK',
                             showhex: true,
                             lengthoffset: 2,
@@ -334,7 +333,7 @@ module.exports = {
                         '6':
                         {
                             name: 'zwave.TxOptions',
-                            type: 'BITMASK',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '0': 'None',
@@ -360,13 +359,13 @@ module.exports = {
                     response: {
                         '0':
                         {
-                            name: 'Version',
+                            name: 'zwave.Version',
                             type: 'ARRAY',
                             len: 12,
                             is_ascii: true
                         },
                         '1': {
-                            name: 'LibraryType',
+                            name: 'zwave.LibraryType',
                             type: 'CONST',
                             optionaloffs: 1,
                             optionalmask: 2,
@@ -437,7 +436,7 @@ module.exports = {
                         '5':
                         {
                             name: 'zwave.TxOptions',
-                            type: 'BITMASK',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '0': 'None',
@@ -469,7 +468,7 @@ module.exports = {
                     param: {},
                     response: {
                         '0': {
-                            name: 'HomeId',
+                            name: 'zwave.HomeId',
                             type: 'ARRAY',
                             len: 4,
                             is_ascii: false,
@@ -526,7 +525,7 @@ module.exports = {
                             {
                                 '0':
                                 {
-                                    fieldname: 'ProtocolVersion',
+                                    fieldname: 'zwave.ProtocolVersion',
                                     fieldmask: 7,
                                     shifter: 0,
                                     fieldenum:
@@ -543,7 +542,7 @@ module.exports = {
                                 },
                                 '1':
                                 {
-                                    fieldname: 'MaxBaudRate',
+                                    fieldname: 'zwave.MaxBaudRate',
                                     fieldmask: 56,
                                     shifter: 3,
                                     fieldenum: { '0': 'Reserved', '1': '96Kbps', '2': '40Kbps' }
@@ -553,8 +552,8 @@ module.exports = {
                         },
                         '1':
                         {
-                            name: 'Security',
-                            type: 'STRUCT_BYTE',
+                            name: 'zwave.Security',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '1': 'Security',
@@ -575,7 +574,7 @@ module.exports = {
                             {
                                 '0':
                                 {
-                                    fieldname: 'SpeedExtension',
+                                    fieldname: 'zwave.SpeedExtension',
                                     fieldmask: 7,
                                     shifter: 0,
                                     fieldenum: { '0': 'Reserved', '1': '100Kbps', '2': '200Kbps' }
@@ -1035,7 +1034,7 @@ module.exports = {
                         '3':
                         {
                             name: 'zwave.TxOptions',
-                            type: 'BITMASK',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '0': 'None',
@@ -1079,7 +1078,7 @@ module.exports = {
                     notimpl: true, id: 0x49, name: 'APPLICATION_UPDATE',
                     response: {
                         '0': {
-                            name: 'UpdateState',
+                            name: 'zwave.UpdateStatus',
                             type: 'CONST',
                             const:
                             {
@@ -1524,7 +1523,7 @@ module.exports = {
                     param: {
                         '0':
                         {
-                            name: 'Enabled',
+                            name: 'zwave.Enabled',
                             type: 'CONST',
                             showhex: true,
                             const: { '0': 'Disabled', '1': 'Enabled' }
@@ -1532,7 +1531,7 @@ module.exports = {
                         '1':
                         {
                             name: 'zwave.TxOptions',
-                            type: 'BITMASK',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '0': 'None',
@@ -1569,7 +1568,7 @@ module.exports = {
                         '2':
                         {
                             name: 'zwave.TxOptions',
-                            type: 'BITMASK',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '0': 'None',
@@ -1611,7 +1610,7 @@ module.exports = {
                         '2':
                         {
                             name: 'zwave.TxOptions',
-                            type: 'BITMASK',
+                            type: 'BITMASK_BYTE',
                             bitflag:
                             {
                                 '0': 'None',

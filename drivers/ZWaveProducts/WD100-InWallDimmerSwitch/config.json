@@ -1,0 +1,196 @@
+{
+	"id": "zwave:0315:4447:3034",
+	"manufacturer": "ZWaveProducts",
+	"product": "WD100",
+	"class": "TBD",
+	"name": {
+		"en": "ZWaveProducts WD100 In-Wall Dimmer Switch"
+	},
+	"deviceType": "Light Dimmer Switch",
+	"roleType": "Always On Slave",
+	"supportedCommandClasses": [
+		"SWITCH_ALL",
+		"ASSOCIATION_GRP_INFO",
+		"ASSOCIATION",
+		"BASIC",
+		"CENTRAL_SCENE",
+		"CONFIGURATION",
+		"DEVICE_RESET_LOCALLY",
+		"FIRMWARE_UPDATE_MD",
+		"MANUFACTURER_SPECIFIC",
+		"POWERLEVEL",
+		"SCENE_ACTIVATION",
+		"SCENE_ACTUATOR_CONF",
+		"SWITCH_MULTILEVEL",
+		"VERSION",
+		"ZWAVEPLUS_INFO"
+	],
+	"controlledCommandClasses": [
+		"CENTRAL_SCENE"
+	],
+	"capabilities": [
+		{
+			"CommandClass": "SWITCH_MULTILEVEL",
+			"type": "switch_dimmer",
+			"label": "Dimmer",
+			"config": []
+		},
+		{
+			"CommandClass": "CENTRAL_SCENE",
+			"type": "scene_number",
+			"label": "Scene Number",
+			"config": []
+		}
+	],
+	"images": {
+		"large": "/drivers/ZWaveProducts/WD100-InWallDimmerSwitch/assets/images/large.png",
+		"small": "/drivers/ZWaveProducts/WD100-InWallDimmerSwitch/assets/images/small.png",
+		"device": "/drivers/ZWaveProducts/WD100-InWallDimmerSwitch/assets/images/device.svg",
+		"pair": "/drivers/ZWaveProducts/WD100-InWallDimmerSwitch/assets/images/device-pair.svg"
+
+	},
+	"zwave": {
+		"manufacturerId": [
+			789
+		],
+		"productTypeId": [
+			17479
+		],
+		"productId": [
+			12340
+		],
+		"wakeUpInterval": 3600,
+		"learnmode": {
+			"instruction": {
+				"en": "1. Turn the connected lights ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.\r\n2. Add(Include) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. \r\n3. Normally, the sequence is as follows: when the inclusion process is prompted by your primary controller, single click and release the rocker switch to ON or OFF position.  The controller should show that the action was successful.  If the controller shows it was a fail, repeat the procedure."
+			}
+		},
+		"productDocumentation": "http://Products.Z-WaveAlliance.org/ProductManual/File?folder=&filename=Manuals/2299/ZWP_WD100_UG_030217.pdf",
+		"zwaveAllianceProductUrl": "https://products.z-wavealliance.org/products/2299",
+		"imageRemotePath": "http://products.z-wavealliance.org/ProductImages/Index?productName=ZC10-17035505",
+		"associationGroups": [
+			{
+				"Description": "Z-Wave Plus Lifeline",
+				"GroupNumber": 1,
+				"MaximumNodes": 5
+			}
+		],
+		"settings": [
+			{
+				"Name": "indicates the time duration of each level",
+				"Description": "The time interval of brightness change between dimming up and down can be adjusted\r\n\r\nValid Values: 1-255 (default = 3), indicates the time duration of each level.",
+				"ParameterNumber": 10,
+				"Size": 2,
+				"DefaultValue": 3,
+				"pType": 0,
+				"flagReadOnly": false,
+				"flagReInclude": false,
+				"flagAdvanced": false,
+				"v3plus": false,
+				"minValue": 0,
+				"maxValue": 0,
+				"ConfigurationParameterValues": [
+					{
+						"From": 1,
+						"To": 255,
+						"Description": "indicates the time duration of each level."
+					}
+				]
+			},
+			{
+				"Name": "the orientation of the ON/OFF on the rocker switch",
+				"Description": "the orientation of the ON/OFF on the rocker switch can be inverted ",
+				"ParameterNumber": 4,
+				"Size": 1,
+				"DefaultValue": 0,
+				"pType": 0,
+				"flagReadOnly": false,
+				"flagReInclude": false,
+				"flagAdvanced": false,
+				"v3plus": false,
+				"minValue": 0,
+				"maxValue": 0,
+				"ConfigurationParameterValues": [
+					{
+						"From": 1,
+						"To": 1,
+						"Description": "the connected light will turn OFF by pressing the top side of the rocker switch and turn ON by pressing the bottom side."
+					},
+					{
+						"From": 0,
+						"To": 0,
+						"Description": "the connected light will turn ON by pressing the top side of the rocker switch and turn OFF by pressing the bottom side. "
+					}
+				]
+			},
+			{
+				"Name": "turning On or Off the lights via remote control ",
+				"Description": "Turning On or Off the lights via remote control \r\nValid Values: 1-99 (default = 1), indicates the number of levels when the light is controlled by remote.  Lower this number, the finer the control of dimming. Higher the number the faster the dimming ",
+				"ParameterNumber": 7,
+				"Size": 1,
+				"DefaultValue": 1,
+				"pType": 0,
+				"flagReadOnly": false,
+				"flagReInclude": false,
+				"flagAdvanced": false,
+				"v3plus": false,
+				"minValue": 0,
+				"maxValue": 0,
+				"ConfigurationParameterValues": [
+					{
+						"From": 1,
+						"To": 99,
+						"Description": "indicates the number of levels when the light is controlled by remote"
+					}
+				]
+			},
+			{
+				"Name": "turning On or Off the lights via remote control or scheduled program",
+				"Description": "Turning On or Off the lights via remote control or scheduled program\r\nValid Values: 1-255 (default = 3), indicates the time duration of each level when the light is controlled by remote",
+				"ParameterNumber": 8,
+				"Size": 2,
+				"DefaultValue": 3,
+				"pType": 0,
+				"flagReadOnly": false,
+				"flagReInclude": false,
+				"flagAdvanced": false,
+				"v3plus": false,
+				"minValue": 0,
+				"maxValue": 0,
+				"ConfigurationParameterValues": [
+					{
+						"From": 1,
+						"To": 255,
+						"Description": "indicates the time duration of each level when the light is controlled by remote"
+					}
+				]
+			},
+			{
+				"Name": "indicates the number of levels",
+				"Description": "The time interval of brightness change between dimming up and down can be adjusted\r\n\r\nLength: 1 Byte\r\nValid Values: 1-99 (default = 1), indicates the number of levels the lighting will change when the timer runs out. \r\n",
+				"ParameterNumber": 9,
+				"Size": 1,
+				"DefaultValue": 1,
+				"pType": 0,
+				"flagReadOnly": false,
+				"flagReInclude": false,
+				"flagAdvanced": false,
+				"v3plus": false,
+				"minValue": 0,
+				"maxValue": 0,
+				"ConfigurationParameterValues": [
+					{
+						"From": 1,
+						"To": 99,
+						"Description": "indicates the number of levels the lighting will change when the timer runs out. "
+					}
+				]
+			}
+		],
+		"unlearnmode": {
+			"instruction": {
+				"en": "1. Turn the connected appliance ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.\r\n2. Delete(Exclude) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. \r\n3. Normally, the sequence is as follows: when the exclusion process is prompted by your primary controller, single click and release the rocker switch.  The controller should show that the action was successful. If the controller shows it was a fail, repeat the procedure."
+			}
+		}
+	}
+}

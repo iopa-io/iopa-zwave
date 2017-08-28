@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
- /*
- * ZWAVE HELPER FUNCTIONS
- *
- * This file is included for the system generated components of IOPA Zwave (iopa-io/iopa-zwave)
- * based on the Z-Wave Public Specification at Z-WavePublic/libzwaveip
- * under the Apache License above.
- * 
- * Do not edit directly, but make a pull request for the src/protocol-generator/util folder
- *
- */
+/*
+* ZWAVE HELPER FUNCTIONS
+*
+* This file is included for the system generated components of IOPA Zwave (iopa-io/iopa-zwave)
+* based on the Z-Wave Public Specification at Z-WavePublic/libzwaveip
+* under the Apache License above.
+* 
+* Do not edit directly, but make a pull request for the src/protocol-generator/util folder
+*
+*/
 
 
 module.exports.helpers = {
@@ -34,6 +34,43 @@ module.exports.helpers = {
             result.name = ENUM[byte];
         }
         return result;
+    },
+    lookupBitMaskValues: function (byte, ENUM) {
+        var result = { value: byte };
+        Object.keys(ENUM).forEach(function (key) {
+            if (byte & parseInt(key)) result[ENUM[key]] = true;
+        });
+        return result;
+    },
+    getBitMaskValue: function (context, name, ENUM) {
+        
+        var value = context[name];
+
+        if (isNaN(value)) {
+
+            var result = 0;     
+
+            Object.keys(value).forEach(function (item) {
+
+                if (!context[item] !== true) return;  // ignore false, null etc.
+
+                if (item in ENUM)
+                    result = result & ENUM[item];
+
+                var namelc = item.toLowerCase();
+
+                for (var key in ENUM) {
+                    if (key.toLowerCase() == namelc) {
+                        result = result & ENUM[key];
+                    }
+                }
+            })
+
+            return result;
+        }
+        else
+            return value;
+
     },
     getValue: function (context, name, ENUM) {
         // convert {name: value: } or "" or nn to number
@@ -81,7 +118,7 @@ module.exports.helpers = {
     },
     lookupNameValueArray: function (buffer, ENUM) {
         if (!buffer) return null;
-        
+
         var result = { values: [], names: [] }
         for (var i = 0; i < buffer.length; i++) {
             var byte = buffer[i];

@@ -223,43 +223,43 @@ SERIAL_API.enum[0x01].command[0x02] = {
 	param: { /* no request parameters */ },
 	encode: function (context) { return Buffer.alloc(0) },
 	response: { 
-		'0x00': {name: "SerialApiVersion" /* BYTE */ }, 
-		'0x01-0': {name: "IsSlaveApi" /* BitMask BITMASK */ }, 
-		'0x01-1': {name: "HasTimerSupport" /* BitMask BITMASK */ }, 
-		'0x01-2': {name: "IsSecondaryController" /* BitMask BITMASK */ }, 
-		'0x01-3': {name: "IsStaticUpdateController" /* BitMask BITMASK */ }, 
-		'0x02a': {name: "NumberOfNodes" /* Properties1 STRUCT_BYTE */ }, 
+		'0x00': {name: "zwave.SerialApiVersion" /* BYTE */ }, 
+		'0x01-0': {name: "zwave.IsSlaveApi" /* BitMask BITMASK */ }, 
+		'0x01-1': {name: "zwave.HasTimerSupport" /* BitMask BITMASK */ }, 
+		'0x01-2': {name: "zwave.IsSecondaryController" /* BitMask BITMASK */ }, 
+		'0x01-3': {name: "zwave.IsStaticUpdateController" /* BitMask BITMASK */ }, 
+		'0x02a': {name: "zwave.NumberOfNodes" /* Properties1 STRUCT_BYTE */ }, 
 		'0x02b': {name: "Reserved" /* Properties1 STRUCT_BYTE */ }, 
-		'0x03': {name: "NodesAvailable" /* BITMASK */ }, 
-		'0x04': {name: "ChipType" /* BYTE */ }, 
-		'0x05': {name: "ChipRevision" /* BYTE */ }
+		'0x03': {name: "zwave.NodesAvailable" /* BITMASK */ }, 
+		'0x04': {name: "zwave.ChipType" /* BYTE */ }, 
+		'0x05': {name: "zwave.ChipRevision" /* BYTE */ }
 	},
 	decode: function (payload) {
 		var context = {};  payload = BufferStream.from(payload);
-		if (!payload.insufficientBytes(1)) context['SerialApiVersion'] = payload.readBYTE(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.SerialApiVersion'] = payload.readBYTE(); else return context;
 		helpers.setNameFlags(context, payload.readBITMASK({length: 1}), ENUM_SERIAL_API_FUNC_GET_INIT_DATA_.enum);
 		{
 			let _properties1 = payload.readBYTE();
-			if (!payload.insufficientBytes(1)) context['NumberOfNodes'] = (_properties1 & 0x1f); else return context;
+			if (!payload.insufficientBytes(1)) context['zwave.NumberOfNodes'] = (_properties1 & 0x1f); else return context;
 			if (!payload.insufficientBytes(1)) context['Reserved'] = (_properties1 & 0x60) >> 5; else return context;
 		}
-		if (!payload.insufficientBytes(1)) context['NodesAvailable'] = payload.readBITMASK({length: payload.at(2) & 0x1f}); else return context;
-		if (!payload.insufficientBytes(1)) context['ChipType'] = payload.readBYTE(); else return context;
-		if (!payload.insufficientBytes(1)) context['ChipRevision'] = payload.readBYTE(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.NodesAvailable'] = payload.readBITMASK({length: payload.at(2) & 0x1f}); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.ChipType'] = payload.readBYTE(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.ChipRevision'] = payload.readBYTE(); else return context;
 		return context;
 	}
 };
 
 const ENUM_SERIAL_API_FUNC_GET_INIT_DATA_ = {
-	IsSlaveApi: 0x01, 
-	HasTimerSupport: 0x02, 
-	IsSecondaryController: 0x03, 
-	IsStaticUpdateController: 0x04, 
+	'zwave.IsSlaveApi': 0x01, 
+	'zwave.HasTimerSupport': 0x02, 
+	'zwave.IsSecondaryController': 0x03, 
+	'zwave.IsStaticUpdateController': 0x04, 
 	enum: {
-		0x01: "IsSlaveApi", 
-		0x02: "HasTimerSupport", 
-		0x03: "IsSecondaryController", 
-		0x04: "IsStaticUpdateController"
+		0x01: "zwave.IsSlaveApi", 
+		0x02: "zwave.HasTimerSupport", 
+		0x03: "zwave.IsSecondaryController", 
+		0x04: "zwave.IsStaticUpdateController"
 	}
 };
 
@@ -277,14 +277,14 @@ SERIAL_API.enum[0x01].command[0x04] = {
 	param: { /* no request parameters */ },
 	encode: function (context) { return Buffer.alloc(0) },
 	response: { 
-		'0x00a': {name: "Single" /* RxStatus STRUCT_BYTE */ }, 
-		'0x00b': {name: "LowPower" /* RxStatus STRUCT_BYTE */ }, 
-		'0x00c': {name: "Busy" /* RxStatus STRUCT_BYTE */ }, 
-		'0x00d': {name: "Broad" /* RxStatus STRUCT_BYTE */ }, 
-		'0x00e': {name: "Multi" /* RxStatus STRUCT_BYTE */ }, 
-		'0x00f': {name: "Mask" /* RxStatus STRUCT_BYTE */ }, 
-		'0x00g': {name: "Explore" /* RxStatus STRUCT_BYTE */ }, 
-		'0x00h': {name: "ForeignFrame" /* RxStatus STRUCT_BYTE */ }, 
+		'0x00': {name: "zwave.RxStatus" /* BITMASK_BYTE */ }, 
+				'0x00-0': {name: "Single" /* zwave.RxStatus BITMASK_BYTE */ },
+				'0x00-1': {name: "LowPower" /* zwave.RxStatus BITMASK_BYTE */ },
+				'0x00-2': {name: "Busy" /* zwave.RxStatus BITMASK_BYTE */ },
+				'0x00-3': {name: "Broad" /* zwave.RxStatus BITMASK_BYTE */ },
+				'0x00-4': {name: "Multi" /* zwave.RxStatus BITMASK_BYTE */ },
+				'0x00-5': {name: "Explore" /* zwave.RxStatus BITMASK_BYTE */ },
+				'0x00-6': {name: "ForeignFrame" /* zwave.RxStatus BITMASK_BYTE */ }, 
 		'0x01': {name: "zwave.NodeId", alias: "SourceNode", encaptype: "NODE_NUMBER" /* BYTE */ }, 
 		'0x02': {name: "zwave.Length", alias: "Length" /* BYTE */ }, 
 		'0x03': {name: "zwave.CommandClass", alias: "CommandClass", encaptype: "CMD_CLASS_REF" /* BYTE */ }, 
@@ -293,23 +293,32 @@ SERIAL_API.enum[0x01].command[0x04] = {
 	},
 	decode: function (payload) {
 		var context = {};  payload = BufferStream.from(payload);
-		{
-			let _rxstatus = payload.readBYTE();
-			if (!payload.insufficientBytes(1)) context['Single'] = ((_rxstatus & 0x00) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['LowPower'] = ((_rxstatus & 0x01) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Busy'] = ((_rxstatus & 0x02) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Broad'] = ((_rxstatus & 0x04) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Multi'] = ((_rxstatus & 0x08) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Mask'] = ((_rxstatus & 0x0c) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Explore'] = ((_rxstatus & 0x10) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['ForeignFrame'] = ((_rxstatus & 0x40) == 0) ? false : true; else return context;
-		}
+		if (!payload.insufficientBytes(1)) context['zwave.RxStatus'] = helpers.lookupBitMaskValues(payload.readBYTE(), ENUM_SERIAL_API_FUNC_APPLICATION_COMMAND_HANDLER_ZWAVE_RX_STATUS.enum); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.NodeId'] = payload.readBYTE(); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.Length'] = payload.readBYTE(); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.CommandClass'] = payload.readBYTE(); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.Command'] = payload.readBYTE(); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.Payload'] = payload.readBUFFER({}); else return context;
 		return context;
+	}
+};
+
+const ENUM_SERIAL_API_FUNC_APPLICATION_COMMAND_HANDLER_ZWAVE_RX_STATUS = {
+	Single: 0x00, 
+	LowPower: 0x01, 
+	Busy: 0x02, 
+	Broad: 0x03, 
+	Multi: 0x04, 
+	Explore: 0x05, 
+	ForeignFrame: 0x06, 
+	enum: {
+		0x00: "Single", 
+		0x01: "LowPower", 
+		0x02: "Busy", 
+		0x03: "Broad", 
+		0x04: "Multi", 
+		0x05: "Explore", 
+		0x06: "ForeignFrame"
 	}
 };
 
@@ -352,23 +361,23 @@ SERIAL_API.enum[0x01].command[0x06] = {
 	name: "SET_TIMEOUTS",
 	version: "4",
 	param: { 
-		'0x00': {name: "RxAckTimeout" /* BYTE */ }, 
-		'0x01': {name: "RxByteTimeout" /* BYTE */ }
+		'0x00': {name: "zwave.RxAckTimeout" /* BYTE */ }, 
+		'0x01': {name: "zwave.RxByteTimeout" /* BYTE */ }
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('RxAckTimeout' in context) payload.writeBYTE(context['RxAckTimeout']); else return payload.asBuffer();
-		if ('RxByteTimeout' in context) payload.writeBYTE(context['RxByteTimeout']); else return payload.asBuffer();
+		if ('zwave.RxAckTimeout' in context) payload.writeBYTE(context['zwave.RxAckTimeout']); else return payload.asBuffer();
+		if ('zwave.RxByteTimeout' in context) payload.writeBYTE(context['zwave.RxByteTimeout']); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
 	response: { 
-		'0x00': {name: "PreviousRxAckTimeout" /* BYTE */ }, 
-		'0x01': {name: "PreviousRxByteTimeout" /* BYTE */ }
+		'0x00': {name: "zwave.PreviousRxAckTimeout" /* BYTE */ }, 
+		'0x01': {name: "zwave.PreviousRxByteTimeout" /* BYTE */ }
 	},
 	decode: function (payload) {
 		var context = {};  payload = BufferStream.from(payload);
-		if (!payload.insufficientBytes(1)) context['PreviousRxAckTimeout'] = payload.readBYTE(); else return context;
-		if (!payload.insufficientBytes(1)) context['PreviousRxByteTimeout'] = payload.readBYTE(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.PreviousRxAckTimeout'] = payload.readBYTE(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.PreviousRxByteTimeout'] = payload.readBYTE(); else return context;
 		return context;
 	}
 };
@@ -380,19 +389,19 @@ SERIAL_API.enum[0x01].command[0x07] = {
 	param: { /* no request parameters */ },
 	encode: function (context) { return Buffer.alloc(0) },
 	response: { 
-		'0x00': {name: "SerialApiApplicationVersion" /* WORD */ }, 
-		'0x01': {name: "ManufacturerId" /* WORD */ }, 
-		'0x02': {name: "DeviceType" /* WORD */ }, 
-		'0x03': {name: "DeviceId" /* WORD */ }, 
-		'0x04': {name: "SerialApiCapabilities" /* BITMASK */ }
+		'0x00': {name: "zwave.SerialApiApplicationVersion" /* WORD */ }, 
+		'0x01': {name: "zwave.ManufacturerId" /* WORD */ }, 
+		'0x02': {name: "zwave.DeviceType" /* WORD */ }, 
+		'0x03': {name: "zwave.DeviceId" /* WORD */ }, 
+		'0x04': {name: "zwave.SerialApiSupported" /* BITMASK */ }
 	},
 	decode: function (payload) {
 		var context = {};  payload = BufferStream.from(payload);
-		if (!payload.insufficientBytes(1)) context['SerialApiApplicationVersion'] = payload.readWORD(); else return context;
-		if (!payload.insufficientBytes(1)) context['ManufacturerId'] = payload.readWORD(); else return context;
-		if (!payload.insufficientBytes(1)) context['DeviceType'] = payload.readWORD(); else return context;
-		if (!payload.insufficientBytes(1)) context['DeviceId'] = payload.readWORD(); else return context;
-		if (!payload.insufficientBytes(1)) context['SerialApiCapabilities'] = payload.readBITMASK({length: 0}); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.SerialApiApplicationVersion'] = payload.readWORD(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.ManufacturerId'] = payload.readWORD(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.DeviceType'] = payload.readWORD(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.DeviceId'] = payload.readWORD(); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.SerialApiSupported'] = payload.readBITMASK({length: 0}); else return context;
 		return context;
 	}
 };
@@ -496,14 +505,15 @@ SERIAL_API.enum[0x01].command[0x13] = {
 		'0x02': {name: "zwave.CommandClass", alias: "CommandClass", encaptype: "CMD_CLASS_REF" /* BYTE */ }, 
 		'0x03': {name: "zwave.Command", alias: "Command", encaptype: "CMD_REF" /* BYTE */ }, 
 		'0x04': {name: "zwave.Payload", alias: "Data", encaptype: "CMD_DATA" /* VARIANT */ }, 
-		'0x05-0': {name: "None" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-1': {name: "LowPower" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-3': {name: "Reserved" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-4': {name: "NoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-5': {name: "Explore" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-7': {name: "HighPower" /* zwave.TxOptions BITMASK */ }, 
+		'0x05': {name: "zwave.TxOptions" /* BITMASK_BYTE */ }, 
+				'0x05-0': {name: "None" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-1': {name: "LowPower" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-3': {name: "Reserved" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-4': {name: "NoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-5': {name: "Explore" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-7': {name: "HighPower" /* zwave.TxOptions BITMASK_BYTE */ }, 
 		'0x06': {name: "zwave.CallbackId" /* BYTE */ }
 	},
 	encode: function (context) {
@@ -513,7 +523,7 @@ SERIAL_API.enum[0x01].command[0x13] = {
 		if ('zwave.CommandClass' in context) payload.writeBYTE(context['zwave.CommandClass']); else return payload.asBuffer();
 		if ('zwave.Command' in context) payload.writeBYTE(context['zwave.Command']); else return payload.asBuffer();
 		if ('zwave.Payload' in context) payload.writeBUFFER(context['zwave.Payload'], { length: (payload.at(1) & 0xff) -2 }); else return payload.asBuffer();
-		if ('zwave.TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		if ('zwave.TxOptions' in context) payload.writeBYTE(helpers.getBitMaskValue(context, 'zwave.TxOptions', ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS)); else return payload.asBuffer();
 		if ('zwave.CallbackId' in context) payload.writeBYTE(context['zwave.CallbackId']); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
@@ -563,36 +573,37 @@ const ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_STATUS = {
 SERIAL_API.enum[0x01].command[0x14] = {
 	name: "SEND_DATA_MULTI",
 	param: { 
-		'0x00a': {name: "NumberOfNodes" /* Properties1 STRUCT_BYTE */ }, 
+		'0x00a': {name: "zwave.NumberOfNodes" /* Properties1 STRUCT_BYTE */ }, 
 		'0x00b': {name: "Reserved" /* Properties1 STRUCT_BYTE */ }, 
-		'0x01': {name: "NodeListData" /* BITMASK */ }, 
+		'0x01': {name: "zwave.NodeListData" /* BITMASK */ }, 
 		'0x02': {name: "zwave.Length", alias: "DataLength" /* BYTE */ }, 
 		'0x03': {name: "zwave.CommandClass", alias: "CommandClass", encaptype: "CMD_CLASS_REF" /* BYTE */ }, 
 		'0x04': {name: "zwave.Command", alias: "Command", encaptype: "CMD_REF" /* BYTE */ }, 
 		'0x05': {name: "zwave.Payload", alias: "Data", encaptype: "CMD_DATA" /* VARIANT */ }, 
-		'0x06-0': {name: "None" /* zwave.TxOptions BITMASK */ }, 
-		'0x06-1': {name: "LowPower" /* zwave.TxOptions BITMASK */ }, 
-		'0x06-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x06-3': {name: "Reserved" /* zwave.TxOptions BITMASK */ }, 
-		'0x06-4': {name: "NoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x06-5': {name: "Explore" /* zwave.TxOptions BITMASK */ }, 
-		'0x06-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK */ }, 
-		'0x06-7': {name: "HighPower" /* zwave.TxOptions BITMASK */ }
+		'0x06': {name: "zwave.TxOptions" /* BITMASK_BYTE */ }, 
+				'0x06-0': {name: "None" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x06-1': {name: "LowPower" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x06-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x06-3': {name: "Reserved" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x06-4': {name: "NoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x06-5': {name: "Explore" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x06-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x06-7': {name: "HighPower" /* zwave.TxOptions BITMASK_BYTE */ }
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('NumberOfNodes' in context || 'Reserved' in context) {
+		if ('zwave.NumberOfNodes' in context || 'Reserved' in context) {
 			let _properties1 = 0x00;
-			if ('NumberOfNodes' in context) _properties1 = _properties1 | ((context['NumberOfNodes']) & 0x1f);
+			if ('zwave.NumberOfNodes' in context) _properties1 = _properties1 | ((context['zwave.NumberOfNodes']) & 0x1f);
 			if ('Reserved' in context) _properties1 = _properties1 | ((context['Reserved'] << 5) & 0x60);
 			payload.writeBYTE(_properties1);
 		} else return payload.asBuffer();;
-		if ('NodeListData' in context) payload.writeBITMASK(context['NodeListData'], {length: payload.at(2) & 0x1f}); else return payload.asBuffer();
+		if ('zwave.NodeListData' in context) payload.writeBITMASK(context['zwave.NodeListData'], {length: payload.at(2) & 0x1f}); else return payload.asBuffer();
 		if ('zwave.Length' in context) payload.writeBYTE(context['zwave.Length']); else return payload.asBuffer();
 		if ('zwave.CommandClass' in context) payload.writeBYTE(context['zwave.CommandClass']); else return payload.asBuffer();
 		if ('zwave.Command' in context) payload.writeBYTE(context['zwave.Command']); else return payload.asBuffer();
 		if ('zwave.Payload' in context) payload.writeBUFFER(context['zwave.Payload'], { length: (payload.at(255) & 0xff) -2 }); else return payload.asBuffer();
-		if ('zwave.TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		if ('zwave.TxOptions' in context) payload.writeBYTE(helpers.getBitMaskValue(context, 'zwave.TxOptions', ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS)); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
 	response: { 
@@ -611,18 +622,18 @@ SERIAL_API.enum[0x01].command[0x15] = {
 	param: { /* no request parameters */ },
 	encode: function (context) { return Buffer.alloc(0) },
 	response: { 
-		'0x00': {name: "Version" /* ARRAY */ }, 
-		'0x01': {name: "LibraryType" /* CONST */ }
+		'0x00': {name: "zwave.Version" /* ARRAY */ }, 
+		'0x01': {name: "zwave.LibraryType" /* CONST */ }
 	},
 	decode: function (payload) {
 		var context = {};  payload = BufferStream.from(payload);
-		if (!payload.insufficientBytes(1)) context['Version'] = payload.readSTRING({ encoding: 'ascii', length: 12 }); else return context;
-		if (!payload.insufficientBytes(1)) context['LibraryType'] = helpers.lookupNameValue(payload.readBYTE(), ENUM_SERIAL_API_FUNC_GET_VERSION_LIBRARY_TYPE.enum); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.Version'] = payload.readSTRING({ encoding: 'ascii', length: 12 }); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.LibraryType'] = helpers.lookupNameValue(payload.readBYTE(), ENUM_SERIAL_API_FUNC_GET_VERSION_ZWAVE_LIBRARY_TYPE.enum); else return context;
 		return context;
 	}
 };
 
-const ENUM_SERIAL_API_FUNC_GET_VERSION_LIBRARY_TYPE = {
+const ENUM_SERIAL_API_FUNC_GET_VERSION_ZWAVE_LIBRARY_TYPE = {
 	NoLib: 0x00, 
 	ControllerStaticLib: 0x01, 
 	ControllerLib: 0x02, 
@@ -679,14 +690,15 @@ SERIAL_API.enum[0x01].command[0x18] = {
 		'0x02': {name: "zwave.CommandClass", alias: "CommandClass", encaptype: "CMD_CLASS_REF" /* BYTE */ }, 
 		'0x03': {name: "zwave.Command", alias: "Command", encaptype: "CMD_REF" /* BYTE */ }, 
 		'0x04': {name: "zwave.Payload", alias: "Data", encaptype: "CMD_DATA" /* VARIANT */ }, 
-		'0x05-0': {name: "None" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-1': {name: "LowPower" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-3': {name: "Reserved" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-4': {name: "NoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-5': {name: "Explore" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK */ }, 
-		'0x05-7': {name: "HighPower" /* zwave.TxOptions BITMASK */ }
+		'0x05': {name: "zwave.TxOptions" /* BITMASK_BYTE */ }, 
+				'0x05-0': {name: "None" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-1': {name: "LowPower" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-3': {name: "Reserved" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-4': {name: "NoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-5': {name: "Explore" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x05-7': {name: "HighPower" /* zwave.TxOptions BITMASK_BYTE */ }
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
@@ -695,7 +707,7 @@ SERIAL_API.enum[0x01].command[0x18] = {
 		if ('zwave.CommandClass' in context) payload.writeBYTE(context['zwave.CommandClass']); else return payload.asBuffer();
 		if ('zwave.Command' in context) payload.writeBYTE(context['zwave.Command']); else return payload.asBuffer();
 		if ('zwave.Payload' in context) payload.writeBUFFER(context['zwave.Payload'], { length: (payload.at(1) & 0xff) -2 }); else return payload.asBuffer();
-		if ('zwave.TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		if ('zwave.TxOptions' in context) payload.writeBYTE(helpers.getBitMaskValue(context, 'zwave.TxOptions', ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS)); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
 	response: { 
@@ -769,12 +781,12 @@ SERIAL_API.enum[0x01].command[0x20] = {
 	param: { /* no request parameters */ },
 	encode: function (context) { return Buffer.alloc(0) },
 	response: { 
-		'0x00': {name: "HomeId" /* ARRAY */ }, 
+		'0x00': {name: "zwave.HomeId" /* ARRAY */ }, 
 		'0x01': {name: "zwave.OwnNodeId", encaptype: "NODE_NUMBER" /* BYTE */ }
 	},
 	decode: function (payload) {
 		var context = {};  payload = BufferStream.from(payload);
-		if (!payload.insufficientBytes(1)) context['HomeId'] = payload.readSTRING({ encoding: 'hex', length: 4 }); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.HomeId'] = payload.readSTRING({ encoding: 'hex', length: 4 }); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.OwnNodeId'] = payload.readBYTE(); else return context;
 		return context;
 	}
@@ -1064,19 +1076,20 @@ SERIAL_API.enum[0x01].command[0x41] = {
 		return payload.asBuffer();
 	},
 	response: { 
-		'0x00a': {name: "ProtocolVersion" /* Capability STRUCT_BYTE */ }, 
-		'0x00b': {name: "MaxBaudRate" /* Capability STRUCT_BYTE */ }, 
+		'0x00a': {name: "zwave.ProtocolVersion" /* Capability STRUCT_BYTE */ }, 
+		'0x00b': {name: "zwave.MaxBaudRate" /* Capability STRUCT_BYTE */ }, 
 		'0x00c': {name: "Routing" /* Capability STRUCT_BYTE */ }, 
 		'0x00d': {name: "Listening" /* Capability STRUCT_BYTE */ }, 
-		'0x01a': {name: "Security" /* Security STRUCT_BYTE */ }, 
-		'0x01b': {name: "Controller" /* Security STRUCT_BYTE */ }, 
-		'0x01c': {name: "SpecificDevice" /* Security STRUCT_BYTE */ }, 
-		'0x01d': {name: "RoutingSlave" /* Security STRUCT_BYTE */ }, 
-		'0x01e': {name: "BeamCapability" /* Security STRUCT_BYTE */ }, 
-		'0x01f': {name: "Sensor250ms" /* Security STRUCT_BYTE */ }, 
-		'0x01g': {name: "Sensor1000ms" /* Security STRUCT_BYTE */ }, 
-		'0x01h': {name: "OptionalFunctionality" /* Security STRUCT_BYTE */ }, 
-		'0x02a': {name: "SpeedExtension" /* Properties1 STRUCT_BYTE */ }, 
+		'0x01': {name: "zwave.Security" /* BITMASK_BYTE */ }, 
+				'0x01-0': {name: "Security" /* zwave.Security BITMASK_BYTE */ },
+				'0x01-1': {name: "Controller" /* zwave.Security BITMASK_BYTE */ },
+				'0x01-2': {name: "SpecificDevice" /* zwave.Security BITMASK_BYTE */ },
+				'0x01-3': {name: "RoutingSlave" /* zwave.Security BITMASK_BYTE */ },
+				'0x01-4': {name: "BeamCapability" /* zwave.Security BITMASK_BYTE */ },
+				'0x01-5': {name: "Sensor250ms" /* zwave.Security BITMASK_BYTE */ },
+				'0x01-6': {name: "Sensor1000ms" /* zwave.Security BITMASK_BYTE */ },
+				'0x01-7': {name: "OptionalFunctionality" /* zwave.Security BITMASK_BYTE */ }, 
+		'0x02a': {name: "zwave.SpeedExtension" /* Properties1 STRUCT_BYTE */ }, 
 		'0x02b': {name: "Reserved2" /* Properties1 STRUCT_BYTE */ }, 
 		'0x03': {name: "zwave.BasicDevice" /* CONST */ }, 
 		'0x04': {name: "zwave.GenericDevice", alias: "GenericDeviceClass", encaptype: "GEN_DEV_REF" /* CONST */ }, 
@@ -1087,25 +1100,15 @@ SERIAL_API.enum[0x01].command[0x41] = {
 		var context = {};  payload = BufferStream.from(payload);
 		{
 			let _capability = payload.readBYTE();
-			if (!payload.insufficientBytes(1)) context['ProtocolVersion'] = helpers.lookupNameValue((_capability & 0x07), ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_PROTOCOL_VERSION.enum); else return context;
-			if (!payload.insufficientBytes(1)) context['MaxBaudRate'] = helpers.lookupNameValue((_capability & 0x38) >> 3, ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_MAX_BAUD_RATE.enum); else return context;
+			if (!payload.insufficientBytes(1)) context['zwave.ProtocolVersion'] = helpers.lookupNameValue((_capability & 0x07), ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_PROTOCOL_VERSION.enum); else return context;
+			if (!payload.insufficientBytes(1)) context['zwave.MaxBaudRate'] = helpers.lookupNameValue((_capability & 0x38) >> 3, ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_MAX_BAUD_RATE.enum); else return context;
 			if (!payload.insufficientBytes(1)) context['Routing'] = ((_capability & 0x40) == 0) ? false : true; else return context;
 			if (!payload.insufficientBytes(1)) context['Listening'] = ((_capability & 0x80) == 0) ? false : true; else return context;
 		}
-		{
-			let _security = payload.readBYTE();
-			if (!payload.insufficientBytes(1)) context['Security'] = ((_security & 0x01) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Controller'] = ((_security & 0x02) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['SpecificDevice'] = ((_security & 0x04) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['RoutingSlave'] = ((_security & 0x08) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['BeamCapability'] = ((_security & 0x10) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Sensor250ms'] = ((_security & 0x20) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['Sensor1000ms'] = ((_security & 0x40) == 0) ? false : true; else return context;
-			if (!payload.insufficientBytes(1)) context['OptionalFunctionality'] = ((_security & 0x80) == 0) ? false : true; else return context;
-		}
+		if (!payload.insufficientBytes(1)) context['zwave.Security'] = helpers.lookupBitMaskValues(payload.readBYTE(), ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SECURITY.enum); else return context;
 		{
 			let _properties1 = payload.readBYTE();
-			if (!payload.insufficientBytes(1)) context['SpeedExtension'] = helpers.lookupNameValue((_properties1 & 0x07), ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_SPEED_EXTENSION.enum); else return context;
+			if (!payload.insufficientBytes(1)) context['zwave.SpeedExtension'] = helpers.lookupNameValue((_properties1 & 0x07), ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPEED_EXTENSION.enum); else return context;
 			if (!payload.insufficientBytes(1)) context['Reserved2'] = (_properties1 & 0xf8) >> 3; else return context;
 		}
 		if (!payload.insufficientBytes(1)) context['zwave.BasicDevice'] = helpers.lookupNameValue(payload.readBYTE(), ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_BASIC_DEVICE.enum); else return context;
@@ -1116,7 +1119,7 @@ SERIAL_API.enum[0x01].command[0x41] = {
 	}
 };
 
-const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_PROTOCOL_VERSION = {
+const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_PROTOCOL_VERSION = {
 	Reserved: 0x00, 
 	Version20: 0x01, 
 	VersionZdk50xZdk42x: 0x02, 
@@ -1137,7 +1140,7 @@ const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_PROTOCOL_VERSION = {
 	}
 };
 
-const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_MAX_BAUD_RATE = {
+const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_MAX_BAUD_RATE = {
 	Reserved: 0x00, 
 	'96Kbps': 0x01, 
 	'40Kbps': 0x02, 
@@ -1148,7 +1151,28 @@ const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_MAX_BAUD_RATE = {
 	}
 };
 
-const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_SPEED_EXTENSION = {
+const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SECURITY = {
+	Security: 0x01, 
+	Controller: 0x02, 
+	SpecificDevice: 0x04, 
+	RoutingSlave: 0x08, 
+	BeamCapability: 0x10, 
+	Sensor250ms: 0x20, 
+	Sensor1000ms: 0x40, 
+	OptionalFunctionality: 0x80, 
+	enum: {
+		0x01: "Security", 
+		0x02: "Controller", 
+		0x04: "SpecificDevice", 
+		0x08: "RoutingSlave", 
+		0x10: "BeamCapability", 
+		0x20: "Sensor250ms", 
+		0x40: "Sensor1000ms", 
+		0x80: "OptionalFunctionality"
+	}
+};
+
+const ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPEED_EXTENSION = {
 	Reserved: 0x00, 
 	'100Kbps': 0x01, 
 	'200Kbps': 0x02, 
@@ -1896,14 +1920,15 @@ SERIAL_API.enum[0x01].command[0x45] = {
 		'0x00': {name: "zwave.NodeId", alias: "NodeId", encaptype: "NODE_NUMBER" /* BYTE */ }, 
 		'0x01': {name: "zwave.Length", alias: "DataLength" /* BYTE */ }, 
 		'0x02': {name: "zwave.CommandClass", alias: "CommandClass", encaptype: "CMD_CLASS_REF" /* BYTE */ }, 
-		'0x03-0': {name: "None" /* zwave.TxOptions BITMASK */ }, 
-		'0x03-1': {name: "LowPower" /* zwave.TxOptions BITMASK */ }, 
-		'0x03-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x03-3': {name: "Reserved" /* zwave.TxOptions BITMASK */ }, 
-		'0x03-4': {name: "NoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x03-5': {name: "Explore" /* zwave.TxOptions BITMASK */ }, 
-		'0x03-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK */ }, 
-		'0x03-7': {name: "HighPower" /* zwave.TxOptions BITMASK */ }, 
+		'0x03': {name: "zwave.TxOptions" /* BITMASK_BYTE */ }, 
+				'0x03-0': {name: "None" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x03-1': {name: "LowPower" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x03-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x03-3': {name: "Reserved" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x03-4': {name: "NoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x03-5': {name: "Explore" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x03-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x03-7': {name: "HighPower" /* zwave.TxOptions BITMASK_BYTE */ }, 
 		'0x04': {name: "zwave.Payload", alias: "Data", encaptype: "CMD_DATA" /* VARIANT */ }
 	},
 	encode: function (context) {
@@ -1911,7 +1936,7 @@ SERIAL_API.enum[0x01].command[0x45] = {
 		if ('zwave.NodeId' in context) payload.writeBYTE(context['zwave.NodeId']); else return payload.asBuffer();
 		if ('zwave.Length' in context) payload.writeBYTE(context['zwave.Length']); else return payload.asBuffer();
 		if ('zwave.CommandClass' in context) payload.writeBYTE(context['zwave.CommandClass']); else return payload.asBuffer();
-		if ('zwave.TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS), {length: 1}); else return payload.asBuffer();
+		if ('zwave.TxOptions' in context) payload.writeBYTE(helpers.getBitMaskValue(context, 'zwave.TxOptions', ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS)); else return payload.asBuffer();
 		if ('zwave.Payload' in context) payload.writeBUFFER(context['zwave.Payload'], { length: (payload.at(1) & 0xff) -2 }); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
@@ -1998,7 +2023,7 @@ SERIAL_API.enum[0x01].command[0x49] = {
 	param: { /* no request parameters */ },
 	encode: function (context) { return Buffer.alloc(0) },
 	response: { 
-		'0x00': {name: "UpdateState" /* CONST */ }, 
+		'0x00': {name: "zwave.UpdateStatus" /* CONST */ }, 
 		'0x01': {name: "zwave.NodeId", alias: "SourceNode", encaptype: "NODE_NUMBER" /* BYTE */ }, 
 		'0x02': {name: "zwave.Length", alias: "Length" /* BYTE */ }, 
 		'0x03': {name: "zwave.BasicDevice" /* CONST */ }, 
@@ -2008,7 +2033,7 @@ SERIAL_API.enum[0x01].command[0x49] = {
 	},
 	decode: function (payload) {
 		var context = {};  payload = BufferStream.from(payload);
-		if (!payload.insufficientBytes(1)) context['UpdateState'] = helpers.lookupNameValue(payload.readBYTE(), ENUM_SERIAL_API_FUNC_APPLICATION_UPDATE_UPDATE_STATE.enum); else return context;
+		if (!payload.insufficientBytes(1)) context['zwave.UpdateStatus'] = helpers.lookupNameValue(payload.readBYTE(), ENUM_SERIAL_API_FUNC_APPLICATION_UPDATE_ZWAVE_UPDATE_STATUS.enum); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.NodeId'] = payload.readBYTE(); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.Length'] = payload.readBYTE(); else return context;
 		if (!payload.insufficientBytes(1)) context['zwave.BasicDevice'] = helpers.lookupNameValue(payload.readBYTE(), ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_BASIC_DEVICE.enum); else return context;
@@ -2019,7 +2044,7 @@ SERIAL_API.enum[0x01].command[0x49] = {
 	}
 };
 
-const ENUM_SERIAL_API_FUNC_APPLICATION_UPDATE_UPDATE_STATE = {
+const ENUM_SERIAL_API_FUNC_APPLICATION_UPDATE_ZWAVE_UPDATE_STATUS = {
 	SucId: 0x10, 
 	DeleteDone: 0x20, 
 	NewIdAssigned: 0x40, 
@@ -2158,21 +2183,22 @@ SERIAL_API.enum[0x01].command[0x52] = {
 	name: "ENABLE_SUC",
 	comment: " Enable / disable the Automatic network update functionality",
 	param: { 
-		'0x00': {name: "Enabled" /* CONST */ }, 
-		'0x01-0': {name: "None" /* zwave.TxOptions BITMASK */ }, 
-		'0x01-1': {name: "LowPower" /* zwave.TxOptions BITMASK */ }, 
-		'0x01-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x01-3': {name: "Reserved" /* zwave.TxOptions BITMASK */ }, 
-		'0x01-4': {name: "NoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x01-5': {name: "Explore" /* zwave.TxOptions BITMASK */ }, 
-		'0x01-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK */ }, 
-		'0x01-7': {name: "HighPower" /* zwave.TxOptions BITMASK */ }, 
+		'0x00': {name: "zwave.Enabled" /* CONST */ }, 
+		'0x01': {name: "zwave.TxOptions" /* BITMASK_BYTE */ }, 
+				'0x01-0': {name: "None" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x01-1': {name: "LowPower" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x01-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x01-3': {name: "Reserved" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x01-4': {name: "NoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x01-5': {name: "Explore" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x01-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x01-7': {name: "HighPower" /* zwave.TxOptions BITMASK_BYTE */ }, 
 		'0x02': {name: "Capabilities" /* BYTE */ }
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
-		if ('Enabled' in context) payload.writeBYTE(helpers.getValue(context, 'Enabled', ENUM_SERIAL_API_FUNC_ENABLE_SUC_ENABLED)); else return payload.asBuffer();
-		if ('zwave.TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS), {length: 8}); else return payload.asBuffer();
+		if ('zwave.Enabled' in context) payload.writeBYTE(helpers.getValue(context, 'zwave.Enabled', ENUM_SERIAL_API_FUNC_ENABLE_SUC_ZWAVE_ENABLED)); else return payload.asBuffer();
+		if ('zwave.TxOptions' in context) payload.writeBYTE(helpers.getBitMaskValue(context, 'zwave.TxOptions', ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS)); else return payload.asBuffer();
 		if ('Capabilities' in context) payload.writeBYTE(context['Capabilities']); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
@@ -2186,7 +2212,7 @@ SERIAL_API.enum[0x01].command[0x52] = {
 	}
 };
 
-const ENUM_SERIAL_API_FUNC_ENABLE_SUC_ENABLED = {
+const ENUM_SERIAL_API_FUNC_ENABLE_SUC_ZWAVE_ENABLED = {
 	Disabled: 0x00, 
 	Enabled: 0x01, 
 	enum: {
@@ -2217,21 +2243,22 @@ SERIAL_API.enum[0x01].command[0x54] = {
 	param: { 
 		'0x00': {name: "zwave.NodeId", alias: "NodeId", encaptype: "NODE_NUMBER" /* BYTE */ }, 
 		'0x01': {name: "Enabled" /* CONST */ }, 
-		'0x02-0': {name: "None" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-1': {name: "LowPower" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-3': {name: "Reserved" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-4': {name: "NoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-5': {name: "Explore" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-7': {name: "HighPower" /* zwave.TxOptions BITMASK */ }, 
+		'0x02': {name: "zwave.TxOptions" /* BITMASK_BYTE */ }, 
+				'0x02-0': {name: "None" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-1': {name: "LowPower" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-3': {name: "Reserved" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-4': {name: "NoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-5': {name: "Explore" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-7': {name: "HighPower" /* zwave.TxOptions BITMASK_BYTE */ }, 
 		'0x03': {name: "Capabilities" /* BYTE */ }
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
 		if ('zwave.NodeId' in context) payload.writeBYTE(context['zwave.NodeId']); else return payload.asBuffer();
-		if ('Enabled' in context) payload.writeBYTE(helpers.getValue(context, 'Enabled', ENUM_SERIAL_API_FUNC_ENABLE_SUC_ENABLED)); else return payload.asBuffer();
-		if ('zwave.TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS), {length: 8}); else return payload.asBuffer();
+		if ('Enabled' in context) payload.writeBYTE(helpers.getValue(context, 'Enabled', ENUM_SERIAL_API_FUNC_ENABLE_SUC_ZWAVE_ENABLED)); else return payload.asBuffer();
+		if ('zwave.TxOptions' in context) payload.writeBYTE(helpers.getBitMaskValue(context, 'zwave.TxOptions', ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS)); else return payload.asBuffer();
 		if ('Capabilities' in context) payload.writeBYTE(context['Capabilities']); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
@@ -2288,21 +2315,22 @@ SERIAL_API.enum[0x01].command[0x57] = {
 	param: { 
 		'0x00': {name: "zwave.NodeId", alias: "NodeId", encaptype: "NODE_NUMBER" /* BYTE */ }, 
 		'0x01': {name: "Enabled" /* CONST */ }, 
-		'0x02-0': {name: "None" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-1': {name: "LowPower" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-3': {name: "Reserved" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-4': {name: "NoRoute" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-5': {name: "Explore" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK */ }, 
-		'0x02-7': {name: "HighPower" /* zwave.TxOptions BITMASK */ }, 
+		'0x02': {name: "zwave.TxOptions" /* BITMASK_BYTE */ }, 
+				'0x02-0': {name: "None" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-1': {name: "LowPower" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-2': {name: "AutoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-3': {name: "Reserved" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-4': {name: "NoRoute" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-5': {name: "Explore" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-6': {name: "NoRetransmission" /* zwave.TxOptions BITMASK_BYTE */ },
+				'0x02-7': {name: "HighPower" /* zwave.TxOptions BITMASK_BYTE */ }, 
 		'0x03': {name: "Capabilities" /* BYTE */ }
 	},
 	encode: function (context) {
 		var payload = BufferStream.alloc();
 		if ('zwave.NodeId' in context) payload.writeBYTE(context['zwave.NodeId']); else return payload.asBuffer();
-		if ('Enabled' in context) payload.writeBYTE(helpers.getValue(context, 'Enabled', ENUM_SERIAL_API_FUNC_ENABLE_SUC_ENABLED)); else return payload.asBuffer();
-		if ('zwave.TxOptions' in context) payload.writeBITMASK(helpers.getFlagArray(context,  ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS), {length: 8}); else return payload.asBuffer();
+		if ('Enabled' in context) payload.writeBYTE(helpers.getValue(context, 'Enabled', ENUM_SERIAL_API_FUNC_ENABLE_SUC_ZWAVE_ENABLED)); else return payload.asBuffer();
+		if ('zwave.TxOptions' in context) payload.writeBYTE(helpers.getBitMaskValue(context, 'zwave.TxOptions', ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS)); else return payload.asBuffer();
 		if ('Capabilities' in context) payload.writeBYTE(context['Capabilities']); else return payload.asBuffer();
 		return payload.asBuffer();
 	},
@@ -3183,16 +3211,17 @@ SERIAL_API.enum[0x01].command[0xff] = {
 };
 
 module.exports.ENUM = {
-	'SERIAL_API_FUNC_APPLICATION_UPDATE_UPDATE_STATE': ENUM_SERIAL_API_FUNC_APPLICATION_UPDATE_UPDATE_STATE,
-	'SERIAL_API_FUNC_ENABLE_SUC_ENABLED': ENUM_SERIAL_API_FUNC_ENABLE_SUC_ENABLED,
+	'SERIAL_API_FUNC_APPLICATION_COMMAND_HANDLER_ZWAVE_RX_STATUS': ENUM_SERIAL_API_FUNC_APPLICATION_COMMAND_HANDLER_ZWAVE_RX_STATUS,
+	'SERIAL_API_FUNC_APPLICATION_UPDATE_ZWAVE_UPDATE_STATUS': ENUM_SERIAL_API_FUNC_APPLICATION_UPDATE_ZWAVE_UPDATE_STATUS,
+	'SERIAL_API_FUNC_ENABLE_SUC_ZWAVE_ENABLED': ENUM_SERIAL_API_FUNC_ENABLE_SUC_ZWAVE_ENABLED,
 	'SERIAL_API_FUNC_GET_CONTROLLER_CAPABILITIES_BITMASK': ENUM_SERIAL_API_FUNC_GET_CONTROLLER_CAPABILITIES_BITMASK,
 	'SERIAL_API_FUNC_GET_INIT_DATA_': ENUM_SERIAL_API_FUNC_GET_INIT_DATA_,
-	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_MAX_BAUD_RATE': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_MAX_BAUD_RATE,
-	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_PROTOCOL_VERSION': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_PROTOCOL_VERSION,
-	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_SPEED_EXTENSION': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_SPEED_EXTENSION,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_BASIC_DEVICE': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_BASIC_DEVICE,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_COMMAND_CLASS': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_COMMAND_CLASS,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_GENERIC_DEVICE': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_GENERIC_DEVICE,
+	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_MAX_BAUD_RATE': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_MAX_BAUD_RATE,
+	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_PROTOCOL_VERSION': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_PROTOCOL_VERSION,
+	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SECURITY': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SECURITY,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_APPLIANCE': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_APPLIANCE,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_AV_CONTROL_POINT': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_AV_CONTROL_POINT,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_DISPLAY': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_DISPLAY,
@@ -3218,7 +3247,8 @@ module.exports.ENUM = {
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_WALL_CONTROLLER': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_WALL_CONTROLLER,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_WINDOW_COVERING': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_WINDOW_COVERING,
 	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_ZIP_NODE': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPECIFIC_DEVICE_ZIP_NODE,
-	'SERIAL_API_FUNC_GET_VERSION_LIBRARY_TYPE': ENUM_SERIAL_API_FUNC_GET_VERSION_LIBRARY_TYPE,
+	'SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPEED_EXTENSION': ENUM_SERIAL_API_FUNC_GET_NODE_PROTOCOL_INFO_ZWAVE_SPEED_EXTENSION,
+	'SERIAL_API_FUNC_GET_VERSION_ZWAVE_LIBRARY_TYPE': ENUM_SERIAL_API_FUNC_GET_VERSION_ZWAVE_LIBRARY_TYPE,
 	'SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS': ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_OPTIONS,
 	'SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_STATUS': ENUM_SERIAL_API_FUNC_SEND_DATA_ZWAVE_TX_STATUS
 };

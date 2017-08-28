@@ -1,0 +1,122 @@
+{
+	"id": "0x0315-4447-3033",
+	"manufacturer": "ZWaveProducts",
+	"product": "WS100",
+	"class": "TBD",
+	"name": {
+		"en": "In-Wall On/Off Switch"
+	},
+	"deviceType": "On/Off Power Switch",
+	"roleType": "Always On Slave",
+	"supportedCommandClasses": [],
+	"controlledCommandClasses": [],
+	"capabilities": [
+		{
+			"CommandClass": "SWITCH_BINARY",
+			"type": "switch_binary",
+			"label": "Switch",
+			"config": []
+		},
+		{
+			"CommandClass": "CENTRAL_SCENE",
+			"type": "scene_number",
+			"label": "Scene Number",
+			"config": []
+		}
+	],
+	"images": {
+		"large": "/drivers/ZWaveProducts/WS100-InWallOnoffSwitch/assets/images/large.png",
+		"small": "/drivers/ZWaveProducts/WS100-InWallOnoffSwitch/assets/images/small.png"
+	},
+	"zwave": {
+		"manufacturerId": [
+			789
+		],
+		"productTypeId": [
+			17479
+		],
+		"productId": [
+			12339
+		],
+		"wakeUpInterval": 3600,
+		"learnmode": {
+			"instruction": {
+				"en": "1. Turn the connected lights ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.\r\n2. Add(Include) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. \r\n3. Normally, the sequence is as follows: when the inclusion process is prompted by your primary controller, single click and release the rocker switch to ON or OFF position.  The controller should show that the action was successful.  If the controller shows it was a fail, repeat the procedure."
+			}
+		},
+		"productDocumentation": "http://Products.Z-WaveAlliance.org/ProductManual/File?folder=&filename=Manuals/2300/ZWP_WS100_UG_030217.pdf",
+		"zwaveAllianceProductUrl": "https://products.z-wavealliance.org/products/2300",
+		"imageRemotePath": "http://products.z-wavealliance.org/ProductImages/Index?productName=ZC10-17035504",
+		"associationGroups": [
+			{
+				"Description": "Z-Wave Plus Lifeline",
+				"GroupNumber": 1,
+				"MaximumNodes": 5
+			}
+		],
+		"settings": [
+			{
+				"Name": "LED Indicator",
+				"Description": "This controls the state of the LED indicator on the switch.",
+				"ParameterNumber": 3,
+				"Size": 1,
+				"DefaultValue": 0,
+				"pType": 0,
+				"flagReadOnly": false,
+				"flagReInclude": false,
+				"flagAdvanced": false,
+				"v3plus": false,
+				"minValue": 0,
+				"maxValue": 0,
+				"ConfigurationParameterValues": [
+					{
+						"From": 0,
+						"To": 0,
+						"Description": "the LED indicator will be OFF when the connected appliance is ON, and the LED indicator will be ON when the connected appliance is OFF"
+					},
+					{
+						"From": 1,
+						"To": 1,
+						"Description": "the LED indicator will be OFF when the connected appliance is OFF, and the LED indicator will be ON when the connected appliance is ON"
+					},
+					{
+						"From": 2,
+						"To": 2,
+						"Description": "the LED indicator will be always OFF regardless of the load status"
+					}
+				]
+			},
+			{
+				"Name": "Orientation of the ON/OFF on the rocker switch",
+				"Description": "The orientation of the ON/OFF on the rocker switch can be inverted ",
+				"ParameterNumber": 4,
+				"Size": 1,
+				"DefaultValue": 0,
+				"pType": 0,
+				"flagReadOnly": false,
+				"flagReInclude": false,
+				"flagAdvanced": false,
+				"v3plus": false,
+				"minValue": 0,
+				"maxValue": 0,
+				"ConfigurationParameterValues": [
+					{
+						"From": 1,
+						"To": 1,
+						"Description": "the connected light will turn OFF by pressing the top side of the rocker switch and turn ON by pressing the bottom side."
+					},
+					{
+						"From": 0,
+						"To": 0,
+						"Description": "the connected light will turn ON by pressing the top side of the rocker switch and turn OFF by pressing the bottom side. "
+					}
+				]
+			}
+		],
+		"unlearnmode": {
+			"instruction": {
+				"en": "1. Turn the connected appliance ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.\r\n2. Delete(Exclude) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. \r\n3. Normally, the sequence is as follows: when the exclusion process is prompted by your primary controller, single click and release the rocker switch.  The controller should show that the action was successful. If the controller shows it was a fail, repeat the procedure."
+			}
+		}
+	}
+}

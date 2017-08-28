@@ -40,23 +40,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 function ZwaveDatabaseMemory(app) {
     _classCallCheck(this, ZwaveDatabaseMemory);
-
 }
 
 module.exports = ZwaveDatabaseMemory;
 
 ZwaveDatabaseMemory.prototype.createServer = function (registeredScheme, next, scheme, options) {
+    
     if (scheme !== registeredScheme)
         return next(scheme, options);
 
     var server = next(scheme, options);
     
     server.db = new ZwaveDb();
+    server.db.ready = false;
 
     var nextSend = server.send;
     server.send = this.send.bind(this, server, nextSend.bind(server));
 
     return server;
+
 };
 
 ZwaveDatabaseMemory.prototype.send = function (server, next, context) {
@@ -71,6 +73,17 @@ ZwaveDatabaseMemory.prototype.send = function (server, next, context) {
             return response;
         })
 }
+
+ZwaveDatabaseMemory.prototype.invoke = function (context, next) {
+    var server = context[ZWAVE.Capabilities][ZWAVE.Server];
+    merge(server.db[ZWAVE.Controller], context[ZWAVE.Controller]);
+    mergenodes(server.db[ZWAVE.Nodes], context[ZWAVE.Nodes]);
+
+    if (server.db.ready)
+        return next();
+    else 
+        return Promise.resolve(true);
+  }
 
 function ZwaveDb() {
     this[ZWAVE.Controller] = {}

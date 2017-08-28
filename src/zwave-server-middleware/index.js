@@ -49,46 +49,42 @@ const
  * @constructor
  * @public
  */
-function ZwaveBinding(options) {
+function ZwaveBinding(app) {
 
   _classCallCheck(this, ZwaveBinding);
 
-  EventEmitter.call(this);
-
-  this.options = options;
-
-  var app = new IopaApp();
   app.use("zwave:", ZwaveTransportServer);
   app.use(ZwaveTransportMiddleware);
   app.use(ZwaveSerialApiMiddleware);
   app.use(ZwaveNodeMiddleware);
   app.use(ZwaveMessageMiddleware);
-  app.use(ZwaveDatabaseMiddleware)
-  app.build();
+  app.use(ZwaveDatabaseMiddleware);
 
   this.app = app;
 }
 
-util.inherits(ZwaveBinding, EventEmitter);
+ZwaveBinding.prototype.createServer = function (registeredScheme, next, scheme, options) {
 
-ZwaveBinding.prototype.listen = function (port, options) {
+  if (scheme !== registeredScheme)
+    return next(scheme, options);
 
-  var server = this.app.createServer("zwave:", options);
-  this.server = server;
+  var server = next(scheme, options);
+  this.server =server;
 
+  var nextListen = server.listen;
+  server.listen = this.listen.bind(this, server, nextListen.bind(server));
+
+  return server;
+
+};
+
+ZwaveBinding.prototype.listen = function (server, nextListen, port, options) {
   var self = this;
-  server.listen(port, options)
-    .then(() => this._initializeController() )
+  return nextListen(port, options)
+    .then(() => this._initializeController())
     .then(() => {
-      console.log(util.inspect(server.db, false, 100));
-      console.log("[ZWAVE] Ready")
-      this.emit('ready', server.db);
-    });
-}
-
-ZwaveBinding.prototype.disconnect = function () {
-  this.server.close();
-  this.server = null;
+      server.db.ready = true;
+     });
 }
 
 ZwaveBinding.prototype._initializeController = function () {
@@ -98,9 +94,9 @@ ZwaveBinding.prototype._initializeController = function () {
   db[ZWAVE.Nodes] = {};
   var self = this;
 
-  return this.run([
+  return _run([
     () => server.sendSerialRequest(PROTOCOL.SERIAL_API_FUNC.GET_VERSION),
-    () => server.sendSerialRequest(PROTOCOL.SERIAL_API_FUNC.SET_TIMEOUTS, [0x0f, 0x0a]), 
+    () => server.sendSerialRequest(PROTOCOL.SERIAL_API_FUNC.SET_TIMEOUTS, [0x0f, 0x0a]),
     () => server.sendSerialRequest(PROTOCOL.SERIAL_API_FUNC.RF_POWER_LEVEL_SET, 0x00),
     () => server.sendSerialRequest(PROTOCOL.SERIAL_API_FUNC.GET_CAPABILITIES),
     () => server.sendSerialRequest(PROTOCOL.SERIAL_API_FUNC.GET_CONTROLLER_CAPABILITIES),
@@ -108,27 +104,23 @@ ZwaveBinding.prototype._initializeController = function () {
     () => server.sendSerialRequest(PROTOCOL.SERIAL_API_FUNC.GET_INIT_DATA),
     () => server.sendGetNodeProtocolInfo(db.allNodes()),
     () => server.sendRequestNodeInfo(db.allNodesButSelf()),
-    () => server.sendNodesSequence(db.onlineNodes(), PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.id,  PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.GET),
-    () => server.sendNodesSequence(db.onlineNodes(), PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.id,  PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFICV2.DEVICE_SPECIFIC_GET),
-     () => server.sendNodesSequence(db.onlineNodes(), PROTOCOL.COMMAND_CLASS.ZWAVEPLUS_INFO.id,  PROTOCOL.COMMAND_CLASS.ZWAVEPLUS_INFO.GET)
-  ]).then(() => {     
-    db = null;     
-    server = null;  
-   });
+    () => server.sendNodesSequence(db.onlineNodes(), PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.id, PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.GET),
+    () => server.sendNodesSequence(db.onlineNodes(), PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.id, PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFICV2.DEVICE_SPECIFIC_GET),
+    () => server.sendNodesSequence(db.onlineNodes(), PROTOCOL.COMMAND_CLASS.ZWAVEPLUS_INFO.id, PROTOCOL.COMMAND_CLASS.ZWAVEPLUS_INFO.GET)
+  ]).then(() => {
+    db = null;
+    server = null;
+  });
   
 }
 
-ZwaveBinding.prototype.run = function (tasks) {
+module.exports = ZwaveBinding;
+module.exports.ZWAVE = ZWAVE;
+
+function _run(tasks) {
   var current = Promise.resolve();
   for (var k = 0; k < tasks.length; ++k) {
     current = current.then(tasks[k]);
   }
   return current;
 }
-
-ZwaveBinding.prototype.send = function (context) {
-  return this.server.send(context)
-}
-
-module.exports = ZwaveBinding;
-

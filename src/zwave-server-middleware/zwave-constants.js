@@ -32,6 +32,7 @@ module.exports = {
     GenericDevice: "zwave.GenericDevice",  // GEN_DEV_REF
     SpecificDevice: "zwave.SpecificDevice", // SPEC_DEV_REF
     OwnNodeId: "zwave.OwnNodeId",
+    SupportedCommandClasses: "zwave.SupportedCommandClasses",
 
     Server: "zwave.Server",
 
@@ -50,7 +51,10 @@ module.exports = {
     Online: "zwave.Online",
     TxOptions: "zwave.TxOptions",
     CallbackId: "zwave.CallbackId",
-
+    UpdateStatus: "zwave.UpdateStatus",
+    NodesAvailable: "zwave.NodesAvailable",
+    ProductKey: "zwave.ProductKey",
+    
     SERIAL: {
 
         SerialMessageType: {

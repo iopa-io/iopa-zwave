@@ -21,7 +21,9 @@ var SerialPort = require('serialport'),
   util = require('util'),
   ZWAVE = require('./zwave-constants'),
   PROTOCOL = ZWAVE.PROTOCOL, /* reqplace with iopa-zwave-protocol */
-  IopaApp = require('../iopa-slim').App;
+  IopaApp = require('../iopa-slim').App,
+  DEVICE = require('../iopa-slim').constants.DEVICE,
+  SERVER = require('../iopa-slim').constants.SERVER;
 
 const
   ZwaveDatabaseMiddleware = require('./zwave-database-middleware'),
@@ -55,9 +57,12 @@ function ZwaveBinding(app) {
 
   app.use("zwave:", ZwaveTransportServer);
   app.use(ZwaveTransportMiddleware);
+  
   app.use(ZwaveSerialApiMiddleware);
+  
   app.use(ZwaveNodeMiddleware);
   app.use(ZwaveMessageMiddleware);
+  
   app.use(ZwaveDatabaseMiddleware);
 
   this.app = app;
@@ -84,6 +89,8 @@ ZwaveBinding.prototype.listen = function (server, nextListen, port, options) {
     .then(() => this._initializeController())
     .then(() => {
       server.db.ready = true;
+      console.log("[ZWAVE] Ready");
+      _onZwaveReady(self.app, server);
      });
 }
 
@@ -112,6 +119,25 @@ ZwaveBinding.prototype._initializeController = function () {
     server = null;
   });
   
+}
+
+function _onZwaveReady(app, server) {
+  Object.keys(server.db[ZWAVE.Nodes]).forEach(function (nodeid) {
+    var node = server.db[ZWAVE.Nodes][nodeid]
+    if (nodeid == server.db[ZWAVE.Controller]["zwave.OwnNodeId"])
+      node[DEVICE.ProductKey] = server.db[ZWAVE.Controller][DEVICE.ProductKey];
+
+    var deviceContext = new EventEmitter();
+    app.addDevice(
+      Object.assign(deviceContext, {
+        [DEVICE.Id] : server.scheme + server.db[ZWAVE.Controller][SERVER.Id] + ":" + nodeid,
+        [ZWAVE.NodeId]: nodeid,
+        [DEVICE.ProductKey]: node[DEVICE.ProductKey],
+        [DEVICE.ProductGeneric]: server.scheme + node[ZWAVE.GenericDevice].name,   
+        [SERVER.Server]: server
+      })
+    );
+  });
 }
 
 module.exports = ZwaveBinding;

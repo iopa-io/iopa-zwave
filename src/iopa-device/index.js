@@ -19,10 +19,11 @@ const util = require('util'),
     EventEmitter = require('events').EventEmitter,
     iopa = require('../iopa-slim'),
     DEVICE = iopa.constants.DEVICE,
-    DEVICE = iopa.constants.SERVER,
     SERVER = iopa.constants.SERVER,
     ZWAVE = require('../zwave-server-middleware/zwave-constants'),
-    PROTOCOL = ZWAVE.PROTOCOL;
+    PROTOCOL = ZWAVE.PROTOCOL,
+    fs = require('fs'),
+    path = require('path')
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -36,51 +37,62 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @constructor
  * @public
  */
-function IopaDeviceMiddleware(app) {
+function IopaDeviceMiddleware(app, options) {
 
     _classCallCheck(this, IopaDeviceMiddleware);
     this.app = app;
 
-    const packageVersion = require('../../package.json').version;    
+    const packageVersion = require('../../package.json').version;
 
     app.properties[SERVER.Capabilities][DEVICE.Capability] = {};
     app.properties[SERVER.Capabilities][DEVICE.Capability][SERVER.Version] = packageVersion;
 
-    app.registerDeviceHandler = this.registerDeviceHandler.bind(this);  
+    app.registerDeviceHandler = this.registerDeviceHandler.bind(this);
     app.addDevice = this.addDevice.bind(this);
 
     app.properties[SERVER.Capabilities][DEVICE.Capability].registerDeviceHandler = app.registerDeviceHandler;
     app.properties[SERVER.Capabilities][DEVICE.Capability].addDevice = app.addDevice;
-    
+
     this.handlers = {};
     this.devices = {};
+
+    if (options && 'drivers' in options) {
+        this.scanDrivers(options.drivers);
+    }
 
 }
 
 module.exports = IopaDeviceMiddleware;
 
 IopaDeviceMiddleware.prototype.registerDeviceHandler = function (productKeys, deviceContext) {
-    
-        productKeys = Array.isArray(productKeys) ? productKeys : [productKeys];
-        var self = this;
-    
-        productKeys.forEach(function(key){
-            self.handlers[key] = deviceContext;
-        });
-    
-    }
+
+    productKeys = Array.isArray(productKeys) ? productKeys : [productKeys];
+    var self = this;
+
+    productKeys.forEach(function (key) {
+        self.handlers[key] = deviceContext;
+    });
+
+}
 
 IopaDeviceMiddleware.prototype.addDevice = function (deviceContext) {
-   if (deviceContext[DEVICE.ProductKey] in this.handlers)
-    {
-        console.log("Initializing Device Handler");
+    if (deviceContext[DEVICE.ProductKey] in this.handlers) {
         var handler = this.handlers[deviceContext[DEVICE.ProductKey]];
-        deviceContext[DEVICE.HandlerName] = handler.config().name;
+        var config = handler.config();
+        deviceContext[DEVICE.HandlerName] = config.manufacturer + " " + config.product + " " + config.name.en;
         deviceContext[DEVICE.Handler] = handler;
         this.devices[deviceContext[DEVICE.Id]] = deviceContext;
+        console.log("Initialized Device Handler " + deviceContext[DEVICE.HandlerName]);
         handler.deviceAdded(deviceContext);
-    } else
-    {
+    } else if (deviceContext[DEVICE.ProductGeneric] in this.handlers) {
+        var handler = this.handlers[deviceContext[DEVICE.ProductGeneric]];
+        var config = handler.config();
+        deviceContext[DEVICE.HandlerName] = config.manufacturer + " " + config.product + " " + config.name.en;
+        deviceContext[DEVICE.Handler] = handler;
+        this.devices[deviceContext[DEVICE.Id]] = deviceContext;
+        console.log("Initialized Device Handler " + deviceContext[DEVICE.HandlerName]);
+        handler.deviceAdded(deviceContext);
+    } else {
         console.log("UNKNOWN DEVICE");
     }
 }
@@ -96,6 +108,23 @@ IopaDeviceMiddleware.prototype.invoke = function (context, next) {
     var deviceContext = this.devices[id];
     var handler = deviceContext[DEVICE.Handler];
 
-    return deviceContext.deviceInvoke.call(handle, deviceContext, context, next);
+    return deviceContext.deviceInvoke.call(handle, deviceContext, context, next).then(function(item){
+        console.log(context.toString());
+    })
 
+}
+
+IopaDeviceMiddleware.prototype.scanDrivers = function (dir) {
+    var self = this;
+
+    fs.readdirSync(dir).forEach(function (manufacturer) {
+        if (manufacturer.charAt(0) !== '.') {
+            fs.readdirSync(path.join(dir, manufacturer)).forEach(function (product) {
+
+                var productPath = path.join(dir, manufacturer, product);
+                if (fs.existsSync(path.join(productPath, 'device.js')))
+                    self.app.use(require(path.join(productPath, 'device.js')));
+            });
+        }
+    });
 }

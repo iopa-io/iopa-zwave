@@ -1,0 +1,32 @@
+{
+	"id": "zwave:Controller",
+	"manufacturer": "ZWave",
+	"product": "Generic",
+	"class": "zwave:Controller",
+	"name": {
+		"en": "Controller"
+	},
+	"deviceType": "Central Controller",
+	"roleType": "Central Static Controller",
+	"supportedCommandClasses": [],
+	"controlledCommandClasses": [],
+	"capabilities": [],
+	"images": {
+		"large": "large.png",
+		"small": "small.png"
+	},
+	"zwave": {
+		"learnmode": {
+			"instruction": {
+				"en": "Follow the instructions provided with your device"
+			}
+		},
+		"associationGroups": [
+			{
+				"Description": "Lifeline",
+				"GroupNumber": 1,
+				"MaximumNodes": 5
+			}
+		]
+	}
+}

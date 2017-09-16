@@ -18,7 +18,7 @@
 const util = require('util'),
     SerialPort = require('serialport'),
     ZWAVE = require('./zwave-constants'),
-    SERVER = { Capabilities: "server.Capabilities" },
+    SERVER = { Capabilities: "server.Capabilities", Server: "server.Server" },
     ZwaveStreamParser = require('./zwave-transport-stream-parser');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -96,7 +96,7 @@ ZwaveTransportServer.prototype.send = function (server, next, context) {
     else {
         for (var prop in context) {
             if (context.hasOwnProperty(prop)) {
-                if ('dispose' in context[prop]) context[prop].dispose();
+                if (context[prop].dispose) context[prop].dispose();
 
                 context[prop] = null;
             }
@@ -123,7 +123,7 @@ ZwaveTransportServer.prototype.onData_ = function (server, data) {
 
     context[ZWAVE.Capabilities] = context[ZWAVE.Capabilities] || {};
     context[ZWAVE.RawPayload] = data;
-    context[ZWAVE.Capabilities][ZWAVE.Server] = server;
+    context[SERVER.Capabilities][SERVER.Server] = server;
     context[ZWAVE.Controller] = {};
     context[ZWAVE.Nodes] = {};
 

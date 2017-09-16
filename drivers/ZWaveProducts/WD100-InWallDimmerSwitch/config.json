@@ -4,7 +4,7 @@
 	"product": "WD100",
 	"class": "TBD",
 	"name": {
-		"en": "ZWaveProducts WD100 In-Wall Dimmer Switch"
+		"en": "In-Wall Dimmer Switch"
 	},
 	"deviceType": "Light Dimmer Switch",
 	"roleType": "Always On Slave",

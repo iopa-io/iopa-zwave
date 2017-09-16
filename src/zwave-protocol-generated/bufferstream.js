@@ -214,7 +214,7 @@ BufferStream.prototype.readBYTE = function () {
 
 BufferStream.prototype.readWORD = function () {
     if (this.insufficientBytes(2)) return null;
-    var value = this.buffer.readUInt16LE(this.readPosition);
+    var value = this.buffer.readUInt16BE(this.readPosition);
     this.readPosition += 2;
     return value;
 };
@@ -230,7 +230,7 @@ BufferStream.prototype.readBIT_24 = function () {
 
 BufferStream.prototype.readDWORD = function () {
     if (this.insufficientBytes(4)) return null;
-    var value = his.buffer.readUInt32LE(this.readPosition);
+    var value = his.buffer.readUInt32BE(this.readPosition);
     this.readPosition += 4;
     return value;
 };
@@ -412,7 +412,7 @@ BufferStream.prototype.writeBYTE = function (uint) {
 
 BufferStream.prototype.writeWORD = function (uint) {
     this._expandBufferIfNeeded(2);
-    this.buffer.writeUInt16LE(uint, this.writePosition);
+    this.buffer.writeUInt16BE(uint, this.writePosition);
     this.writePosition += 2;
     return this;
 };
@@ -428,7 +428,7 @@ BufferStream.prototype.writeINT_24 = function (uint) {
 
 BufferStream.prototype.writeDWORD = function (uint) {
     this._expandBufferIfNeeded(4);
-    this.buffer.writeUInt32LE(uint, this.writePosition);
+    this.buffer.writeUInt32BE(uint, this.writePosition);
     this.writePosition += 4;
     return this;
 };

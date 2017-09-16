@@ -19,8 +19,8 @@ const util = require('util'),
     EventEmitter = require('events').EventEmitter,
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL,
-    SERVER = { Capabilities: "server.Capabilities" };
-
+    SERVER = { Capabilities: "server.Capabilities", Server: "server.Server" }
+    
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*
@@ -72,10 +72,13 @@ ZwaveDatabaseMemory.prototype.send = function (server, next, context) {
             mergenodes(server.db[ZWAVE.Nodes], response[ZWAVE.Nodes]);
             return response;
         })
+        .catch(function(ex) {
+            console.log(ex);
+        });
 }
 
 ZwaveDatabaseMemory.prototype.invoke = function (context, next) {
-    var server = context[ZWAVE.Capabilities][ZWAVE.Server];
+    var server = context[SERVER.Capabilities][SERVER.Server];
     merge(server.db[ZWAVE.Controller], context[ZWAVE.Controller]);
     mergenodes(server.db[ZWAVE.Nodes], context[ZWAVE.Nodes]);
 
@@ -119,7 +122,6 @@ function merge(target, changes) {
         if (changes.hasOwnProperty(key)) target[key] = changes[key];
     }
 };
-
 
 function mergeDoubleLayer(target, changes) {
     if (!target)

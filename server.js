@@ -5,13 +5,12 @@ const util = require('util'),
   platformid = "urn:io.resin:" + (process.env.RESIN_DEVICE_UUID || "localhost"),
   locationid = process.env.RESIN_LOCATION_ID || "home",
   IopaApp = require('./src/iopa-slim').App,
+  IopaDevice = require('./src/iopa-device'),
   ZwaveBinding = require('./src').Server,
-  ZwaveDevices = require('./src').Devices,
   ZWAVE = ZwaveBinding.ZWAVE,
-  DEVICE = require('./src/iopa-slim').constants.DEVICE,
-  SERVER = require('./src/iopa-slim').constants.SERVER,
-  WD100 = require('./drivers/ZWaveProducts/WD100-InWallDimmerSwitch/device');
 
+  WD100 = require('./drivers/ZWaveProducts/WD100-InWallDimmerSwitch/device');
+  
 process.removeAllListeners('SIGINT');
 
 process.on('SIGINT', function () {
@@ -29,10 +28,7 @@ process.on('SIGINT', function () {
 
       var app = new IopaApp();
       app.use(ZwaveBinding);
-      app.use(ZwaveDevices)
-
-      // TO DO: MOVE FOLLOWING TO FOLDER DISCOVERY ROUTINE
-      app.use(WD100);
+      app.use(IopaDevice, {drivers:  __dirname + '/drivers'});
 
       var options = { locationid: locationid, platformid: platformid };
       var server = app.createServer("zwave:", options);
@@ -40,8 +36,7 @@ process.on('SIGINT', function () {
       server.listen(port.comName)
         .then(() => {
           console.log(util.inspect(server.db, false, 100));
-          console.log("[ZWAVE] Ready");
-          _onZwaveReady(app, server);
+
         });
 
     } else {
@@ -52,21 +47,6 @@ process.on('SIGINT', function () {
 
 
 // PRIVATE METHODS
-
-function _onZwaveReady(app, server) {
-  Object.keys(server.db[ZWAVE.Nodes]).forEach(function (nodeid) {
-    var node = server.db[ZWAVE.Nodes][nodeid]
-    var deviceContext = new EventEmitter();
-    app.addDevice(
-      Object.assign(deviceContext, {
-        [DEVICE.Id]: node[DEVICE.Id],
-        [ZWAVE.NodeId]: nodeid,
-        [DEVICE.ProductKey]: node[DEVICE.ProductKey],
-        [SERVER.Server]: server
-      })
-    );
-  });
-}
 
 function _findZwavePort(callback) {
   SerialPort.list(function listPortsCallback(error, ports) {

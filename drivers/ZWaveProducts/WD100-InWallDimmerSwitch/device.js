@@ -13,21 +13,21 @@
 
 function InWallDimmerSwitch(app) {
 
-	app.registerDeviceHandler(["0315:4447:3034"], this);
+	app.registerDeviceHandler(["zwave:0315:4447:3034", "zwave:000C:4447:3034"], this);
 
-//	app.registerZwaveAssociationGroup(1, this);
+	//	app.registerZwaveAssociationGroup(1, this);
 
 	this.app = app;
-	
+
 }
 
-InWallDimmerSwitch.prototype.config = function(deviceContext) {
-   return require('./config.json');
+InWallDimmerSwitch.prototype.config = function (deviceContext) {
+	return require('./config.json');
 }
 
 InWallDimmerSwitch.prototype.deviceAdded = function (deviceContext) {
 
-	var server = deviceContext.server;
+	var server = deviceContext["server.Server"];
 
 	deviceContext.on('capability.DimmerLevel',
 		(dimmerLevel) => {
@@ -35,7 +35,7 @@ InWallDimmerSwitch.prototype.deviceAdded = function (deviceContext) {
 				"zwave.NodeId": deviceContext["zwave.NodeId"],
 				"zwave.CommandClass": "SWITCH_MULTILEVEL",
 				"zwave.Command": "SET",
-				"CurrentValue": dimmerlevel
+				"TargetValue": dimmerlevel
 			});
 		});
 
@@ -45,9 +45,31 @@ InWallDimmerSwitch.prototype.deviceAdded = function (deviceContext) {
 				"zwave.NodeId": deviceContext["zwave.NodeId"],
 				"zwave.CommandClass": "SWITCH_MULTILEVEL",
 				"zwave.Command": "SET",
-				"CurrentValue": onoff ? 255 : 0
+				"TargetValue": onoff ? 255 : 0
 			});
 		});
+
+	this.getCapability({
+		"zwave.NodeId": deviceContext["zwave.NodeId"],
+		"server.Server": server,
+		"capability.OnOff": true
+	})
+
+}
+
+InWallDimmerSwitch.prototype.getCapability = function (context) {
+
+	if ("capability.DimmerLevel" in context || "capability.OnOff" in context) {
+		return context["server.Server"].send({
+			"zwave.NodeId": context["zwave.NodeId"],
+			"zwave.CommandClass": "SWITCH_MULTILEVEL",
+			"zwave.Command": "GET"
+		}).then(function (response) {
+			console.log(response.toString());
+		})
+	}
+
+	return Promise.resolve();
 
 }
 
@@ -56,8 +78,8 @@ InWallDimmerSwitch.prototype.deviceInvoke = function (context, next) {
 	if (context["zwave.CommandClass"] == "SWITCH_MULTILEVEL" &&
 		context["zwave.Command"] == "REPORT") {
 		context.device.update({
-			"capability.DimmerLevel": context["CurrentValue"],
-			"capability.OnOff": context["CurrentValue"] > 0,
+			"capability.DimmerLevel": context["CurrentValue"].value,
+			"capability.OnOff": context["CurrentValue"].value > 0,
 		});
 		return next();
 	}

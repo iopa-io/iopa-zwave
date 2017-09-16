@@ -19,7 +19,7 @@ const util = require('util'),
     EventEmitter = require('events').EventEmitter,
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL,
-    SERVER = { Capabilities: "server.Capabilities" },
+    SERVER = { Capabilities: "server.Capabilities", Server: "server.Server" },
     BufferStream = ZWAVE.PROTOCOL.util.BufferStream;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -194,8 +194,8 @@ ZwaveTransportFlowControl.prototype.invoke = function (context, next) {
     var response = context[ZWAVE.RawPayload];
 
     if (response[0] == ZWAVE.SERIAL.SerialFrameType.SOF) {
-        context[ZWAVE.Capabilities][ZWAVE.Server].stream.write(ACK1);
-        context[ZWAVE.Capabilities][ZWAVE.Server].stream.drain();
+        context[SERVER.Capabilities][SERVER.Server].stream.write(ACK1);
+        context[SERVER.Capabilities][SERVER.Server].stream.drain();
         console.log("W: ACK");
     }
 

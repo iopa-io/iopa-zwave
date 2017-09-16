@@ -39,7 +39,7 @@ module.exports = { BASIC_DEVICE_CLASS:
       { name: 'ROUTING_SLAVE',
         help: 'Routing Slave',
         comment: 'Node is a slave with routing capabilities' } },
-  _DEVICE_CLASS: 
+  GENERIC_DEVICE_CLASS: 
    { '1': 
       { name: 'GENERIC_CONTROLLER',
         help: 'Generic Controller',
@@ -47,7 +47,7 @@ module.exports = { BASIC_DEVICE_CLASS:
         SPECIFIC_DEVICE_CLASS: 
          { '0': 
             { name: 'NOT_USED',
-      GENERIC        help: 'Not Used',
+              help: 'Not Used',
               comment: 'Specific Device Class Not Used' },
            '1': 
             { name: 'PORTABLE_REMOTE_CONTROLLER',

@@ -19,8 +19,9 @@ const util = require('util'),
     EventEmitter = require('events').EventEmitter,
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL,
-    SERVER = { Capabilities: "server.Capabilities" };
-
+    DEVICE = require('../iopa-slim').constants.DEVICE,
+    SERVER = require('../iopa-slim').constants.SERVER
+ 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*
@@ -153,10 +154,8 @@ ZwaveMessageNodeMissing.prototype.send = function (server, next, context) {
             response[ZWAVE.Nodes][0] = undefined;
         }
 
-        response[DEVICE.Id] = server.Id + ":" + nodeId;
         return response;
     })
-
 }
 
 /*
@@ -179,7 +178,7 @@ const ZWAVE_MESSAGE_TRANSACTION_MANAGER = "_ZwaveMessageTransactionMatcher";
 
 ZwaveMessageTransactionMatcher.prototype.invoke = function (context, next) {
 
-    var server = context[ZWAVE.Capabilities][ZWAVE.Server];
+    var server = context[SERVER.Capabilities][SERVER.Server];
     var store = server[ZWAVE_MESSAGE_TRANSACTION_MANAGER];
 
     if (context[ZWAVE.MessageType] == ZWAVE.SERIAL.SerialMessageType.Response
@@ -189,6 +188,7 @@ ZwaveMessageTransactionMatcher.prototype.invoke = function (context, next) {
         || context[ZWAVE.SerialFunctionClass] == PROTOCOL.SERIAL_API_FUNC.APPLICATION_COMMAND_HANDLER) {
         var lastRequest = store.requestQueue.shift() || {};
         store.lastRequestFunctionClass = lastRequest[ZWAVE.SerialFunctionClass];
+        clearTimeout(lastRequest.timeout);
         if (lastRequest.resolve)
             {
             lastRequest.resolve(context);
@@ -224,11 +224,13 @@ ZwaveMessageTransactionMatcher.prototype.send = function (server, next, context)
     store.lastRequestFunctionClass = serialFunctionClass;
 
     return next(context).then(function () {
+
         return new Promise(function (resolve, reject) {
             store.requestQueue.push({
                 [ZWAVE.SerialFunctionClass]: serialFunctionClass,
                 resolve: resolve,
-                reject: reject
+                reject: reject,
+                timeout: setTimeout(resolve, 2500)
             });
         });
     });

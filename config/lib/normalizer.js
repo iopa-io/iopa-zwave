@@ -73,7 +73,7 @@ function processItem(context, level, parent, grandparent) {
     if (typeof context !== 'object')
         return;
 
-    
+
     Object.keys(context).forEach(function (key) {
         processItem(context[key], level + 1, context, parent);
     })
@@ -88,7 +88,7 @@ function processItem(context, level, parent, grandparent) {
         removeParentPrefixes(context, grandparent, 'COMMAND_CLASS_', ['name']);
     }
     normalizeNameFields(context, grandparent, ['name', 'fieldname', 'flagname']);
-    
+
 
     if (level > 1) {
         promoteArray(context, ['multi_array'], 'paramdescloc');
@@ -108,9 +108,12 @@ function processItem(context, level, parent, grandparent) {
         fixLengthMaskShifter(context);
     }
 
-    if (level > 3) {
+    if (level > 3 && !context.COMMAND) {
         removeUnderScore(context, ['name', 'fieldname', 'flagname']);
         removeCaps(context, ['name', 'fieldname', 'flagname']);
+    }
+
+    if (level > 3) {
         fixParamTypeBITMASKBitFlags(context, 'BITMASK');
         fixParamTypeBYTECONSTBitFlags(context, ['BYTE', 'ENUM']);
         fixParamTypeMULTI_ARRAY(context, 'MULTI_ARRAY');
@@ -257,22 +260,22 @@ function normalizeNameEncaptype(name, encaptype) {
 }
 
 function normalizeNameFields(context, grandparent, attributes) {
+
     attributes.forEach(function (attr) {
         if (attr in context) {
             context[attr] = normalizeName(context[attr]);
 
+
             if ('encaptype' in context) {
                 var count = Object.keys(grandparent.param).filter((i) => (grandparent.param[i].encaptype == context.encaptype)).length
-                if (count == 1 || context[attr] == 'SourceNodeId')
-                    {
-                        context.alias = context[attr];
-                        context[attr] = normalizeNameEncaptype(context[attr], context.encaptype);
+                if (count == 1 || context[attr] == 'SourceNodeId') {
+                    context.alias = context[attr];
+                    context[attr] = normalizeNameEncaptype(context[attr], context.encaptype);
 
-                        if (context.encaptype == 'CMD_DATA' && context.variant.lenmask > 0)
-                            {
-                                console.log(context);
-                            }
+                    if (context.encaptype == 'CMD_DATA' && context.variant.lenmask > 0) {
+                        console.log(context);
                     }
+                }
 
             }
         }
@@ -648,8 +651,8 @@ function removeCaps(context, tags) {
 
 function normalizeName(value) {
     value = normalizeRemovePrefixes(value);
-    
-  
+
+
     if (value.indexOf('/') > -1) {
         var result = value
             .split('/')

@@ -33,9 +33,7 @@ module.exports = {
     SpecificDevice: "zwave.SpecificDevice", // SPEC_DEV_REF
     OwnNodeId: "zwave.OwnNodeId",
     SupportedCommandClasses: "zwave.SupportedCommandClasses",
-
-    Server: "zwave.Server",
-
+    
     FrameType: "zwave.FrameType",
     Length: "zwave.Length",
     MessageType: "zwave.MessageType",

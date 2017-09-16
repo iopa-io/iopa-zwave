@@ -37,6 +37,7 @@ const constants = {
     },
     DEVICE: {
         ProductKey: "device.ProductKey",
+        ProductGeneric: "device.ProductGeneric",
         Id: "device.Id",
         Handler: "device.Handler",
         Capability: "urn:io:iopa:device",
@@ -73,15 +74,16 @@ util.inherits(AppBuilderForServers, AppBuilder);
 * @param mw the middleware to add 
 * @override
 */
-AppBuilderForServers.prototype.use = function (scheme, mw) {
+AppBuilderForServers.prototype.use = function (scheme, mw, options) {
 
     if (typeof scheme !== 'string' && !(scheme instanceof String)) {
+        options = mw;
         mw = scheme;
         scheme = null;
     }
 
     var mw_instance = Object.create(mw.prototype);
-    mw.call(mw_instance, this);
+    mw.call(mw_instance, this, options);
 
     if (scheme) {
         this.scheme = scheme;
@@ -157,10 +159,10 @@ AppBuilder.prototype.createContext = function () {
 *
 * @param mw the middleware to add 
 */
-AppBuilder.prototype.use = function use(mw) {
+AppBuilder.prototype.use = function use(mw, options) {
 
     var mw_instance = Object.create(mw.prototype);
-    mw.call(mw_instance, this);
+    mw.call(mw_instance, this, options);
 
     if (mw_instance.invoke)
         this.middleware.push(mw_instance.invoke.bind(mw_instance));
@@ -463,6 +465,7 @@ function IopaContext() {
 */
 IopaContext.prototype.init = function init() {
     this[SERVER.Id] = "#" + _nextSequence();
+    this[SERVER.Capabilities] = {};
     return this;
 };
 

@@ -19,6 +19,7 @@ const util = require('util'),
     EventEmitter = require('events').EventEmitter,
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL,
+    IOPA = { Scheme: "iopa.Scheme", Body: "iopa.Body", Protocol: "iopa.Protocol", Path: "iopa.Path" },       
     SERVER = { Capabilities: "server.Capabilities", Server: "server.Server" }
     
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -78,6 +79,8 @@ ZwaveDatabaseMemory.prototype.send = function (server, next, context) {
 }
 
 ZwaveDatabaseMemory.prototype.invoke = function (context, next) {
+    if (context[IOPA.Scheme] !== "zwave:") return next();        
+    
     var server = context[SERVER.Capabilities][SERVER.Server];
     merge(server.db[ZWAVE.Controller], context[ZWAVE.Controller]);
     mergenodes(server.db[ZWAVE.Nodes], context[ZWAVE.Nodes]);

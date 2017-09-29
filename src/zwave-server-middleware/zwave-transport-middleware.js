@@ -20,6 +20,7 @@ const util = require('util'),
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL,
     SERVER = { Capabilities: "server.Capabilities", Server: "server.Server" },
+    IOPA = { Scheme: "iopa.Scheme", Body: "iopa.Body", Protocol: "iopa.Protocol", Path: "iopa.Path" },     
     BufferStream = ZWAVE.PROTOCOL.util.BufferStream;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29,10 +30,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * 
  * This middleware is composed of the following functions:
  * 
- * 1. ZwaveMessageSerialFramer
- *  - converts raw zwave payload into frame
- * 
- * 2. ZwaveTransportFlowControl
+ * 1. ZwaveTransportFlowControl
  *  - hooks into write to block further writes until ACK is received from zwave controller
  *  - hooks into invoke to autorespond with ACKs to SOF messages
  *  - hooks into invoke to ignore duplicate messages received
@@ -52,58 +50,10 @@ function ZwaveTransportMiddleware(app) {
 
     app.use(ZwaveLogger);
     app.use(ZwaveTransportFlowControl);
-    app.use(ZwaveMessageSerialFramer);
 }
 
 module.exports = ZwaveTransportMiddleware;
 
-/*
- * Zwave Transport Serial Framer Middleware 
- * 
- * This middleware 
- *  - converts raw zwave payload into frame
- * 
- * @class ZwaveMessageSerialFramer
- * @param app  IOPA AppBuilder App
- * @constructor
- * @private
- */
-function ZwaveMessageSerialFramer(app) {
-    _classCallCheck(this, ZwaveMessageSerialFramer);
-}
-
-ZwaveMessageSerialFramer.prototype.invoke = function (context, next) {
-    var response = context[ZWAVE.RawPayload];
-    context[ZWAVE.FrameType] = response[0];
-    context[ZWAVE.Length] = response[1];
-    context[ZWAVE.MessageType] = response[2];
-    context[ZWAVE.SerialFunctionClass] = response[3];
-    context[ZWAVE.SerialPayload] = response.slice(4, response[1] + 1);
-    return next();
-}
-
-ZwaveMessageSerialFramer.prototype.send = function (server, next, context) {
-
-    if (typeof context !== 'object' || !(ZWAVE.SerialFunctionClass in context))
-        return next(context);
-
-    var rawpayload = BufferStream.alloc("Serial Framer Send");
-    rawpayload.writeARRAY([
-        ZWAVE.SERIAL.SerialFrameType.SOF,
-        context[ZWAVE.SerialPayload].length + 3,
-        ZWAVE.SERIAL.SerialMessageType.Request,
-        context[ZWAVE.SerialFunctionClass],
-        ...context[ZWAVE.SerialPayload], 0x00])
-    rawpayload = rawpayload.asBuffer();
-
-    if (rawpayload.length > 1)
-        rawpayload[rawpayload.length - 1] = ZWAVE.SERIAL.generateChecksum(rawpayload);
-
-    context[ZWAVE.RawPayload] = rawpayload;
-
-    return next(context);
-
-}
 
 /*
  * Zwave Transport Serial Framer Middleware 
@@ -121,10 +71,14 @@ function ZwaveLogger(app) {
 }
 
 ZwaveLogger.prototype.invoke = function (context, next) {
+    if (context[IOPA.Scheme] !== "zwave:") return next();
+    
     var data = context[ZWAVE.RawPayload];
 
-    if (data.length < 5)
+    if (data.length < 5 || data[3] == 0)
+    {
         console.log("R: " + util.inspect(data));
+    }
     else
         console.log("R: "
             + PROTOCOL.SERIAL_API_FUNC.enum[data[3]].name
@@ -189,7 +143,7 @@ const ACK1 = new Buffer([ZWAVE.SERIAL.SerialFrameType.ACK]);
 // PUBLIC METHODS
 
 ZwaveTransportFlowControl.prototype.invoke = function (context, next) {
-
+    if (context[IOPA.Scheme] !== "zwave:") return next();    
 
     var response = context[ZWAVE.RawPayload];
 

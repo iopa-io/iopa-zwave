@@ -5,10 +5,9 @@ const util = require('util'),
   PlatformId = process.env.RESIN_DEVICE_UUID ? "urn:io.resin:" + process.env.RESIN_DEVICE_UUID : "controller1",
   LocationId = process.env.RESIN_LOCATION_ID || "home",
   IopaApp = require('./src/iopa-slim').App,
-  IopaDevice = require('./src/iopa-device'),
+  MqttServer = require('./src').MqttServer,
   ZwaveServer = require('./src').ZwaveServer,
-  ZWAVE = ZwaveServer.ZWAVE,
-  WD100 = require('./drivers/ZWaveProducts/WD100-InWallDimmerSwitch/device');
+  ZWAVE = ZwaveServer.ZWAVE;
 
 var zwave, mqtt;
 
@@ -30,15 +29,17 @@ process.on('SIGINT', function () {
 
       var app = new IopaApp();
       app.use(ZwaveServer);
-      app.use(IopaDevice, { drivers: __dirname + '/drivers' });
+      app.use(MqttServer);
 
       zwave = app.createServer("zwave:");
-      //   mqtt = app.createServer("mqtt:");
+      mqtt = app.createServer("mqtt:");
 
-      zwave.listen(port.comName, { LocationId: LocationId, PlatformId: PlatformId })
+      mqtt.connect({ root: "", LocationId: LocationId, PlatformId: PlatformId })
         .then(() => {
+          zwave.listen(port.comName, { LocationId: LocationId, PlatformId: PlatformId })
+        }).then(() => {
           console.log(util.inspect(zwave.db, false, 100));
-
+          mqtt.subscribe(zwave.id);
         });
 
     } else {

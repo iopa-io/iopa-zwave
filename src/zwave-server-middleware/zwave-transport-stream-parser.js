@@ -46,7 +46,9 @@ function ZwaveTransportStreamParser() {
 util.inherits(ZwaveTransportStreamParser, Transform);
 
 ZwaveTransportStreamParser.prototype._transform = function (chunk, encoding, cb) {
+
     chunk.copy(this.bufferStream.buffer, this.writePosition);   
+    
     this.writePosition += chunk.length;   
     var nextByte;
     var loop = true;
@@ -73,8 +75,8 @@ ZwaveTransportStreamParser.prototype._transform = function (chunk, encoding, cb)
                     var messageLength = (nextByte & 0xff) + 2;
 
                     if (dataLength >= messageLength) {
-                        var nextBuffer = BufferStream.allocFrom(this.bufferStream.buffer.slice(this.startOffset + messageLength), "INBOUND");
-                        this.push(this.bufferStream.sliceAsBuffer(this.startOffset, this.startOffset + messageLength));
+                       var nextBuffer = BufferStream.allocFrom(this.bufferStream.buffer.slice(this.startOffset + messageLength), "INBOUND");
+                        this.push(this.bufferStream.buffer.slice(this.startOffset, this.startOffset + messageLength));
                         this.bufferStream = nextBuffer;
                         this.writePosition = dataLength - messageLength;
                         this.startOffset = 0;

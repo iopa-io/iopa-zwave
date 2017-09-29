@@ -19,11 +19,44 @@ const util = require('util'),
     IopaServer = require('../iopa-slim').IopaServer,
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL,
+    IOPA = { Scheme: "iopa.Scheme", Body: "iopa.Body", Protocol: "iopa.Protocol", Path: "iopa.Path" },     
     SERVER = require('../iopa-slim').constants.SERVER,
-    DEVICE = require('../iopa-slim').constants.DEVICE;
-    
+    DEVICE = require('../iopa-slim').constants.DEVICE,
+    BufferStream = ZWAVE.PROTOCOL.util.BufferStream;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+ * Zwave Serial Middleware
+ * 
+ * This middleware is composed of the following functions:
+ * 
+ * 1. Zwave Serial API Middleware
+ *  - Coverts responses from Serial API into fields on the ZWAVE (IOPA) Context Record
+ *  - Adds Serial API Functions to the server object when server is created
+
+ * 2. ZwaveMessageSerialFramer
+ *  - converts raw zwave payload into frame
+ * 
+ * Usage: app.use(ZwaveSerialMiddleware)
+ * 
+ * @class ZwaveSerialMiddleware
+ * @param app  IOPA AppBuilder App
+ * @constructor
+ * @public
+ */
+function ZwaveSerialMiddleware(app) {
+    _classCallCheck(this, ZwaveSerialMiddleware);
+
+    if (!app.properties[SERVER.Capabilities][ZWAVE.Capabilities][ZWAVE.Version])
+        throw new Error("ZwaveSerialMiddleware requires embedded ZwaveServer");
+
+    app.use(ZwaveMessageSerialFramer);
+    app.use(ZwaveSerialApiMiddleware);
+
+}
+
+module.exports = ZwaveSerialMiddleware;
 
 /*
  * Zwave Serial API Middleware
@@ -48,9 +81,9 @@ function ZwaveSerialApiMiddleware(app) {
     this.app = app;
 }
 
-module.exports = ZwaveSerialApiMiddleware;
-
 ZwaveSerialApiMiddleware.prototype.invoke = function (context, next) {
+
+    if (context[IOPA.Scheme] !== "zwave:") return next();        
 
     var cmd = context[ZWAVE.SerialFunctionClass];
 
@@ -113,6 +146,56 @@ ZwaveSerialApiMiddleware.prototype.send = function (server, next, context) {
         var payload = context[ZWAVE.SerialPayload] || [];
         context[ZWAVE.SerialPayload] = Array.isArray(payload) ? payload : [payload];
     }
+
+    return next(context);
+
+}
+
+/*
+ * Zwave Message Serial Framer Middleware 
+ * 
+ * This middleware 
+ *  - converts raw zwave payload into frame
+ * 
+ * @class ZwaveMessageSerialFramer
+ * @param app  IOPA AppBuilder App
+ * @constructor
+ * @private
+ */
+function ZwaveMessageSerialFramer(app) {
+    _classCallCheck(this, ZwaveMessageSerialFramer);
+}
+
+ZwaveMessageSerialFramer.prototype.invoke = function (context, next) {
+    if (context[IOPA.Scheme] !== "zwave:") return next();
+
+    var response = context[ZWAVE.RawPayload];
+    context[ZWAVE.FrameType] = response[0];
+    context[ZWAVE.Length] = response[1];
+    context[ZWAVE.MessageType] = response[2];
+    context[ZWAVE.SerialFunctionClass] = response[3];
+    context[ZWAVE.SerialPayload] = response.slice(4, response[1] + 1);
+    return next();
+}
+
+ZwaveMessageSerialFramer.prototype.send = function (server, next, context) {
+
+    if (typeof context !== 'object' || !(ZWAVE.SerialFunctionClass in context))
+        return next(context);
+
+    var rawpayload = BufferStream.alloc("Serial Framer Send");
+    rawpayload.writeARRAY([
+        ZWAVE.SERIAL.SerialFrameType.SOF,
+        context[ZWAVE.SerialPayload].length + 3,
+        ZWAVE.SERIAL.SerialMessageType.Request,
+        context[ZWAVE.SerialFunctionClass],
+        ...context[ZWAVE.SerialPayload], 0x00])
+    rawpayload = rawpayload.asBuffer();
+
+    if (rawpayload.length > 1)
+        rawpayload[rawpayload.length - 1] = ZWAVE.SERIAL.generateChecksum(rawpayload);
+
+    context[ZWAVE.RawPayload] = rawpayload;
 
     return next(context);
 

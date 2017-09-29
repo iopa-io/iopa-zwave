@@ -19,6 +19,7 @@ const util = require('util'),
     EventEmitter = require('events').EventEmitter,
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL,
+    IOPA = { Scheme: "iopa.Scheme", Body: "iopa.Body", Protocol: "iopa.Protocol", Path: "iopa.Path" },       
     DEVICE = require('../iopa-slim').constants.DEVICE,
     SERVER = require('../iopa-slim').constants.SERVER
  
@@ -178,6 +179,8 @@ const ZWAVE_MESSAGE_TRANSACTION_MANAGER = "_ZwaveMessageTransactionMatcher";
 
 ZwaveMessageTransactionMatcher.prototype.invoke = function (context, next) {
 
+    if (context[IOPA.Scheme] !== "zwave:") return next();        
+    
     var server = context[SERVER.Capabilities][SERVER.Server];
     var store = server[ZWAVE_MESSAGE_TRANSACTION_MANAGER];
 

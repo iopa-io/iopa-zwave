@@ -18,7 +18,8 @@
 const util = require('util'),
     SerialPort = require('serialport'),
     ZWAVE = require('./zwave-constants'),
-    SERVER = { Capabilities: "server.Capabilities", Server: "server.Server" },
+    IOPA = { Scheme: "iopa.Scheme", Body: "iopa.Body", Protocol: "iopa.Protocol", Path: "iopa.Path" },     
+    SERVER = { Capabilities: "server.Capabilities", Server: "server.Server", Topics: "server.Topics" },
     ZwaveStreamParser = require('./zwave-transport-stream-parser');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -74,6 +75,11 @@ ZwaveTransportServer.prototype.listen = function (server, port, options) {
 
     server.stream = server._rawstream;
 
+    server.id = "zwave" + "/" + options.PlatformId + "/" + options.LocationId;
+
+    this.app.properties[SERVER.Capabilities][SERVER.Topics] = this.app.properties[SERVER.Capabilities][SERVER.Topics] || {};
+    this.app.properties[SERVER.Capabilities][SERVER.Topics][server.id] = server;
+
     parser.on("data", this.onData_.bind(this, server));
 
     return new Promise(function (resolve, reject) {
@@ -92,7 +98,7 @@ ZwaveTransportServer.prototype.send = function (server, next, context) {
 
     var result = this.write_(server, message);
 
-    if ('dispose' in context) context.dispose();
+   if ('dispose' in context) context.dispose();
     else {
         for (var prop in context) {
             if (context.hasOwnProperty(prop)) {
@@ -101,8 +107,8 @@ ZwaveTransportServer.prototype.send = function (server, next, context) {
                 context[prop] = null;
             }
         };
-    }
-    
+    } 
+
     return result;
 
 }
@@ -120,10 +126,13 @@ ZwaveTransportServer.prototype.close = function (server) {
 ZwaveTransportServer.prototype.onData_ = function (server, data) {
 
     var context = this.app.createContext();
-
-    context[ZWAVE.Capabilities] = context[ZWAVE.Capabilities] || {};
-    context[ZWAVE.RawPayload] = data;
+    context[IOPA.Body] = data;
     context[SERVER.Capabilities][SERVER.Server] = server;
+    context[IOPA.Scheme] = "zwave:";
+    context[IOPA.Protocol] = "ZWAVE/5.0";
+    context[IOPA.Path] = "out/" + server.id;
+
+    context[ZWAVE.RawPayload] = context[IOPA.Body];    
     context[ZWAVE.Controller] = {};
     context[ZWAVE.Nodes] = {};
 

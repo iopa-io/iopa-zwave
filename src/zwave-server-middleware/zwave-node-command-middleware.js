@@ -18,6 +18,7 @@
 const util = require('util'),
     IopaServer = require('../iopa-slim').IopaServer,
     DEVICE = require('../iopa-slim').constants.DEVICE,
+    IOPA = { Scheme: "iopa.Scheme", Body: "iopa.Body", Protocol: "iopa.Protocol", Path: "iopa.Path" },       
     SERVER = require('../iopa-slim').constants.SERVER,
     ZWAVE = require('./zwave-constants'),
     PROTOCOL = ZWAVE.PROTOCOL;
@@ -65,7 +66,7 @@ function ZwaveNodeCommandReportMiddleware(app) {
 
 ZwaveNodeCommandReportMiddleware.prototype.invoke = function (context, next) {
 
-    
+    if (context[IOPA.Scheme] !== "zwave:") return next();          
 
     switch (context[ZWAVE.CommandClass]) {
         case PROTOCOL.COMMAND_CLASS.MANUFACTURER_SPECIFIC.id:
@@ -150,6 +151,8 @@ ZwaveNodeCommandSerialMiddleware.prototype.send = function (server, next, contex
  */
 ZwaveNodeCommandSerialMiddleware.prototype.invoke = function (context, next) {
 
+    if (context[IOPA.Scheme] !== "zwave:") return next();        
+    
     switch (context[ZWAVE.SerialFunctionClass]) {
         case PROTOCOL.SERIAL_API_FUNC.GET_INIT_DATA:
             context[ZWAVE.Controller][ZWAVE.NodesAvailable].forEach(function (NodeId) {

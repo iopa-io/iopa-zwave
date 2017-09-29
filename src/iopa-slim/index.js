@@ -31,6 +31,7 @@ const constants = {
         RawStream: "server.RawStream",
         RawTransport: "server.RawTransport",
         Server: "server.Server",
+        Topics: "server.Topics",
         IsLocalOrigin: "server.IsLocalOrigin",
         IsRequest: "server.IsRequest",
         Version: "server.Version"

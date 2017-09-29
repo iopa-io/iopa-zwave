@@ -15,6 +15,7 @@
     "fuse-box": "^2.2.2",
     "uglify-es": "^3.0.28",
     "xml2js": "^0.4.17",
-    "serialport": "^4.0.0"
+    "serialport": "^4.0.0",
+    "mqtt": "^2.13.0"
   }
 }

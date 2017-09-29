@@ -6,7 +6,7 @@ const util = require('util'),
   LocationId = process.env.RESIN_LOCATION_ID || "home",
   IopaApp = require('./src/iopa-slim').App,
   IopaDevice = require('./src/iopa-device'),
-  ZwaveServer = require('./src').ZwaveServer,
+  ZwaveServer = require('./src').Server,
   ZWAVE = ZwaveServer.ZWAVE,
   WD100 = require('./drivers/ZWaveProducts/WD100-InWallDimmerSwitch/device');
 
@@ -17,7 +17,6 @@ process.removeAllListeners('SIGINT');
 process.on('SIGINT', function () {
   console.log('disconnecting...');
   zwave.close();
-  mqtt.close();
 });
 
 // RUN MAIN

@@ -23,13 +23,15 @@ var SerialPort = require('serialport'),
   PROTOCOL = ZWAVE.PROTOCOL, /* reqplace with iopa-zwave-protocol */
   IopaApp = require('../iopa-slim').App,
   DEVICE = require('../iopa-slim').constants.DEVICE,
-  SERVER = require('../iopa-slim').constants.SERVER;
+  SERVER = require('../iopa-slim').constants.SERVER,
+  MQTT = { Body: "mqtt.Body", Topic: "mqtt.Topic", Capabilities: "mqtt.Capabilities", Version: "mqtt.Version" };
+
 
 const
   ZwaveDatabaseMiddleware = require('./zwave-database-middleware'),
   ZwaveMessageMiddleware = require('./zwave-message-middleware'),
   ZwaveNodeMiddleware = require('./zwave-node-command-middleware'),
-  ZwaveSerialApiMiddleware = require('./zwave-serial-middleware'),
+  ZwaveSerialMiddleware = require('./zwave-serial-middleware'),
   ZwaveTransportMiddleware = require('./zwave-transport-middleware'),
   ZwaveTransportServer = require('./zwave-transport-server');
 
@@ -57,12 +59,9 @@ function ZwaveBinding(app) {
 
   app.use("zwave:", ZwaveTransportServer);
   app.use(ZwaveTransportMiddleware);
-  
-  app.use(ZwaveSerialApiMiddleware);
-  
+  app.use(ZwaveSerialMiddleware);
   app.use(ZwaveNodeMiddleware);
   app.use(ZwaveMessageMiddleware);
-  
   app.use(ZwaveDatabaseMiddleware);
 
   this.app = app;
@@ -74,7 +73,7 @@ ZwaveBinding.prototype.createServer = function (registeredScheme, next, scheme, 
     return next(scheme, options);
 
   var server = next(scheme, options);
-  this.server =server;
+  this.server = server;
 
   var nextListen = server.listen;
   server.listen = this.listen.bind(this, server, nextListen.bind(server));
@@ -91,7 +90,7 @@ ZwaveBinding.prototype.listen = function (server, nextListen, port, options) {
       server.db.ready = true;
       console.log("[ZWAVE] Ready");
       _onZwaveReady(self.app, server);
-     });
+    });
 }
 
 ZwaveBinding.prototype._initializeController = function () {
@@ -118,7 +117,7 @@ ZwaveBinding.prototype._initializeController = function () {
     db = null;
     server = null;
   });
-  
+
 }
 
 function _onZwaveReady(app, server) {
@@ -128,16 +127,24 @@ function _onZwaveReady(app, server) {
       node[DEVICE.ProductKey] = server.db[ZWAVE.Controller][DEVICE.ProductKey];
 
     var deviceContext = new EventEmitter();
-    app.addDevice(
+
+
+    if (app.addDevice) app.addDevice(
       Object.assign(deviceContext, {
-        [DEVICE.Id] : server.scheme + server.db[ZWAVE.Controller][SERVER.Id] + ":" + nodeid,
+        [DEVICE.Id]: server.scheme + server.db[ZWAVE.Controller][SERVER.Id] + ":" + nodeid,
         [ZWAVE.NodeId]: nodeid,
         [DEVICE.ProductKey]: node[DEVICE.ProductKey],
-        [DEVICE.ProductGeneric]: server.scheme + node[ZWAVE.GenericDevice].name,   
+        [DEVICE.ProductGeneric]: server.scheme + node[ZWAVE.GenericDevice].name,
         [SERVER.Server]: server
       })
     );
   });
+
+  if (app.properties[SERVER.Capabilities][MQTT.Capabilities])
+    app.properties[SERVER.Capabilities][MQTT.Capabilities][SERVER.Server].publish("ready", server.id);
+
+    console.log(server.db);
+
 }
 
 module.exports = ZwaveBinding;

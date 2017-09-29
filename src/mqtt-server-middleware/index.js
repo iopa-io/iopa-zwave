@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-/*
- * ZWAVE PROTOCOL
- *
- * This file is included for the system generated components of IOPA Zwave (iopa-io/iopa-zwave)
- * based on the Z-Wave Public Specification at Z-WavePublic/libzwaveip
- * under the Apache License above.
- * 
- * This file is included for testing convenience only; use dist folder for production
- *
- */
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-//module.exports.PROTOCOL = require('./bin/protocol-zwave').default;
-module.exports.PROTOCOL = require('./zwave-protocol-generated');
-module.exports.ZwaveServer = require('./zwave-server-middleware');
-module.exports.MqttServer = require('./mqtt-server-middleware');
+const
+  MqttTransportServer = require('./mqtt-transport-server'),
+  MqttBridgeMiddleware = require('./mqtt-bridge-middleware');
+
+function MqttServer(app) {
+  app.use("mqtt:", MqttTransportServer);
+  app.use(MqttBridgeMiddleware);
+}
+
+module.exports = MqttServer;
